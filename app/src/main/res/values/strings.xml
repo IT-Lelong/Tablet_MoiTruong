@@ -13,7 +13,7 @@
     <string name="tt_soluong">數量</string>
 
     /*Menu Button*/
-    <string name="btn_KT01">設備管理稽核評分表 </string>
+    <string name="btn_5S">5S評分表</string>
     <string name="btn_KT02">(週)柴油堆高機檢查稽查表</string>
     <string name="btn_KT03">廢水站操作日誌</string>
     <string name="btn_KT04">廢水水質自動,連續監測站操作日記</string>

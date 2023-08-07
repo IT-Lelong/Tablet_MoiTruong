@@ -18,16 +18,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Menu extends AppCompatActivity {
 
     //private Create_Table Cre_db = null;
-    Button btn_KT01, btn_KT02, btn_KT03, btn_KT04;
+    Button btn_MT01, btn_MT02, btn_MT03, btn_MT04;
     TextView menuID;
     String ID;
     Locale locale;
@@ -50,15 +51,16 @@ public class Menu extends AppCompatActivity {
         //Cre_db = new Create_Table(this);
         //Cre_db.open();
 
-        btn_KT01 = findViewById(R.id.btn_KT01);
-        btn_KT02 = findViewById(R.id.btn_KT02);
-        btn_KT03 = findViewById(R.id.btn_KT03);
-        btn_KT04 = findViewById(R.id.btn_KT04);
+        btn_MT01 = findViewById(R.id.btn_MT01);
+        btn_MT01.setOnClickListener(btnlistener);
 
-        btn_KT01.setOnClickListener(btnlistener);
-        btn_KT02.setOnClickListener(btnlistener);
-        btn_KT03.setOnClickListener(btnlistener);
-        btn_KT04.setOnClickListener(btnlistener);
+        /*btn_MT02 = findViewById(R.id.btn_MT02);
+        btn_MT03 = findViewById(R.id.btn_MT03);
+        btn_MT04 = findViewById(R.id.btn_MT04);
+
+        btn_MT02.setOnClickListener(btnlistener);
+        btn_MT03.setOnClickListener(btnlistener);
+        btn_MT04.setOnClickListener(btnlistener);*/
 
     }
 
@@ -75,7 +77,7 @@ public class Menu extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            try {
+            /*try {
                 URL url = new URL(params[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
@@ -91,7 +93,23 @@ public class Menu extends AppCompatActivity {
                 result = "";
             } finally {
                 return result;
+            }*/
+
+            try {
+                String baseUrl = params[0];
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(baseUrl)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+                Call<String> call = apiInterface.getData(baseUrl);
+                Response<String> response = call.execute();
+                result = response.body();
+            } catch (Exception e) {
+                result = "";
             }
+            return result;
         }
 
         @Override
@@ -133,9 +151,9 @@ public class Menu extends AppCompatActivity {
             //利用switch case方法，之後新增按鈕只需新增case即可
             switch (v.getId()) {
 
-                /*case R.id.btn_KT01: {
+                /*case R.id.btn_MT01: {
                     Intent QR010 = new Intent();
-                    QR010.setClass(Menu.this, KT02_activity.class);
+                    QR010.setClass(Menu.this, MT02_activity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("ID", ID);
                     bundle.putString("SERVER", g_server);
@@ -144,9 +162,9 @@ public class Menu extends AppCompatActivity {
                     break;
                 }
 
-                case R.id.btn_KT02: {
+                case R.id.btn_MT02: {
                     Intent QR010 = new Intent();
-                    QR010.setClass(Menu.this, KT02_activity.class);
+                    QR010.setClass(Menu.this, MT02_activity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("ID", ID);
                     bundle.putString("SERVER", g_server);
@@ -155,7 +173,7 @@ public class Menu extends AppCompatActivity {
                     break;
                 }
 
-                case R.id.btn_KT03: {
+                case R.id.btn_MT03: {
                     Intent QR010 = new Intent();
                     QR010.setClass(Menu.this, KT_1.class);
                     Bundle bundle = new Bundle();
@@ -166,7 +184,7 @@ public class Menu extends AppCompatActivity {
                     break;
                 }
 
-                case R.id.btn_KT04: {
+                case R.id.btn_MT04: {
                     Intent QR010 = new Intent();
                     QR010.setClass(Menu.this, KT_1.class);
                     Bundle bundle = new Bundle();
@@ -294,5 +312,6 @@ public class Menu extends AppCompatActivity {
                 break;
         }
         resources.updateConfiguration(configuration, displayMetrics);
+
     }
 }

@@ -15,7 +15,7 @@
     <string name="tt_soluong">Số lượng</string>
 
     /*Menu Button*/
-    <string name="btn_KT01">BIỂU ĐIỂM KHẢO HẠCH QUẢN LÝ THIẾT BỊ</string>
+    <string name="btn_5S">Thi đua 5S</string>
     <string name="btn_KT02">BIỂU GHI CHÉP  KIỂM TRA XE NÂNG DẦU (TUẦN)</string>
     <string name="btn_KT03">NHẬT KÝ VẬN HÀNH TRẠM NƯỚC THẢI</string>
     <string name="btn_KT04">NHẬT KÝ VẬN HÀNH TRẠM QUAN TRẮC NƯỚC THẢI</string>
