@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoiTruong</string>
+    <string name="app_name">HSE</string>
     <string name="btn_ok">確定</string>
     <string name="btn_cancel">取消</string>
     <string name="btn_clean">清空</string>
@@ -17,7 +17,7 @@
     <string name="btn_KT02">(週)柴油堆高機檢查稽查表</string>
     <string name="btn_KT03">廢水站操作日誌</string>
     <string name="btn_KT04">廢水水質自動,連續監測站操作日記</string>
-    <string name="Change_Data">更新報表項目</string>
+    <string name="Change_Data">同步資料</string>
 
     /* activity_main */
     <string name="main_id">帳號：</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MoiTruong</string>
+    <string name="app_name">HSE</string>
 
     <string name="btn_ok">Xác nhận</string>
     <string name="btn_cancel">Hủy bỏ</string>
@@ -19,7 +19,7 @@
     <string name="btn_KT02">BIỂU GHI CHÉP  KIỂM TRA XE NÂNG DẦU (TUẦN)</string>
     <string name="btn_KT03">NHẬT KÝ VẬN HÀNH TRẠM NƯỚC THẢI</string>
     <string name="btn_KT04">NHẬT KÝ VẬN HÀNH TRẠM QUAN TRẮC NƯỚC THẢI</string>
-    <string name="Change_Data">Cập nhật dữ liệu hạng mục</string>
+    <string name="Change_Data">Đồng bộ dữ liệu</string>
 
     /* activity_main */
     <string name="main_id">Tài khoản：</string>
