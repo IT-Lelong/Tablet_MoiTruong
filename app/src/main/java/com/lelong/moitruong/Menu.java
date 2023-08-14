@@ -7,8 +7,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Process;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +28,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -143,7 +140,6 @@ public class Menu extends AppCompatActivity implements Call_interface {
                             alert.show();
                         }
                     }
-
                 }
             });
         }

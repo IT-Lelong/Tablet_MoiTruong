@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Đồng bọ dữ liệu"
+        android:text="Đồng bộ dữ liệu"
         android:textSize="20sp" />
 
 
