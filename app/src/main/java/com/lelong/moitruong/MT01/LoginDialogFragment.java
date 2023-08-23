@@ -67,7 +67,7 @@ public class LoginDialogFragment extends DialogFragment {
                         case 0:
                             cur_getdata = Cre_db.getdata_tc_fcd("DH");
                             break;
-                        case  1:
+                        case 1:
                             cur_getdata = Cre_db.getdata_tc_fcd("BL");
                             break;
                         default:
