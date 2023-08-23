@@ -53,23 +53,25 @@ public class LoginDialogFragment extends DialogFragment {
         Spinner sp_department = view.findViewById(R.id.sp_department);
 
         List<String> itemList = new ArrayList<>();
-        itemList.add("");
+        //itemList.add("");
         itemList.add("Đức Hòa");
-        itemList.add("Bến Lúc");
+        itemList.add("Bến Lức");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, itemList);
         sp_factory.setAdapter(adapter);
         sp_factory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cur_getdata = null;
+                Cursor cur_getdata;
                     switch (position){
-                        case 1:
+                        case 0:
                             cur_getdata = Cre_db.getdata_tc_fcd("DH");
                             break;
-                        case  2:
+                        case  1:
                             cur_getdata = Cre_db.getdata_tc_fcd("BL");
                             break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + position);
                     }
 
                 if (cur_getdata.getCount() > 0 ) {
