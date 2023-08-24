@@ -58,8 +58,11 @@ public class LoginDialogFragment extends DialogFragment {
         factory_List.add("Đức Hòa");
         factory_List.add("Bến Lức");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, factory_List);
-        sp_factory.setAdapter(adapter);
+        ArrayAdapter<String> factory_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, factory_List);
+        ArrayAdapter<String> department_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, department_List);
+        sp_factory.setAdapter(factory_adapter);
+        sp_department.setAdapter( department_adapter);
+
         sp_factory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -84,6 +87,7 @@ public class LoginDialogFragment extends DialogFragment {
                         department_List.add(materialInfo);
                         cur_getdata.moveToNext();
                     }
+                    department_adapter.notifyDataSetChanged();
                 }
             }
 
