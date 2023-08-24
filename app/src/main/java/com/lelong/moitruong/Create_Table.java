@@ -22,11 +22,13 @@ public class Create_Table {
     String TABLE_NAME_TC_FCB = "tc_fcb_file"; //TB Mã hạng mục kiểm tra (tên Tab)
     String TABLE_NAME_TC_FCC = "tc_fcc_file"; //TB Mã hạng mục chi tiết (hạng mục con)
     String TABLE_NAME_TC_FCD = "tc_fcd_file"; //TB Mã bộ phận
+    String TABLE_NAME_TC_FCE = "tc_fce_file"; //TB Dữ liệu đã kiểm tra
 
     String CREATE_TABLE_TC_FCA = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCA + " (tc_fca001 TEXT, tc_fca002 TEXT, tc_fca003 TEXT, tc_fca004 TEXT )";
     String CREATE_TABLE_TC_FCB = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCB + " (tc_fcb001 TEXT, tc_fcb002 TEXT, tc_fcb003 TEXT, tc_fcb004 TEXT, tc_fcb005 TEXT )";
     String CREATE_TABLE_TC_FCC = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCC + " (tc_fcc001 TEXT, tc_fcc002 TEXT, tc_fcc003 TEXT, tc_fcc004 TEXT, tc_fcc005 TEXT, tc_fcc006 TEXT, tc_fcc007 TEXT, tc_fcc008 TEXT )";
     String CREATE_TABLE_TC_FCD = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCD + " (tc_fcd001 TEXT, tc_fcd002 TEXT, tc_fcd003 TEXT, tc_fcd004 TEXT, tc_fcd005 TEXT, tc_fcd006 TEXT )";
+    String CREATE_TABLE_TC_FCE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCE + " (tc_fce001 TEXT, tc_fce002 TEXT, tc_fce003 TEXT, tc_fce004 TEXT, tc_fce005 TEXT, tc_fce006 TEXT, tc_fce007 TEXT, tc_fce008 TEXT )";
 
     public void setInsertCallback(Call_interface callback) {
         this.callInterface = callback;
@@ -46,6 +48,7 @@ public class Create_Table {
             db.execSQL(CREATE_TABLE_TC_FCB);
             db.execSQL(CREATE_TABLE_TC_FCC);
             db.execSQL(CREATE_TABLE_TC_FCD);
+            db.execSQL(CREATE_TABLE_TC_FCE);
         } catch (Exception e) {
 
         }
@@ -57,10 +60,12 @@ public class Create_Table {
             String DROP_TABLE_NAME_TC_FCB = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCB;
             String DROP_TABLE_NAME_TC_FCC = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCC;
             String DROP_TABLE_NAME_TC_FCD = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCD;
+            String DROP_TABLE_NAME_TC_FCE = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCE;
             db.execSQL(DROP_TABLE_NAME_TC_FCA);
             db.execSQL(DROP_TABLE_NAME_TC_FCB);
             db.execSQL(DROP_TABLE_NAME_TC_FCC);
             db.execSQL(DROP_TABLE_NAME_TC_FCD);
+            db.execSQL(DROP_TABLE_NAME_TC_FCE);
             db.close();
         } catch (Exception e) {
         }
@@ -71,21 +76,6 @@ public class Create_Table {
         db.delete(TABLE_NAME_TC_FCB, null, null);
         db.delete(TABLE_NAME_TC_FCC, null, null);
         db.delete(TABLE_NAME_TC_FCD, null, null);
-    }
-
-    public Cursor getdata_tc_fcd(String g_factory) {
-        String g_dk;
-        if (g_factory == "DH") {
-            g_dk = "1','2','3";
-        }else {
-            g_dk = "4";
-        }
-
-        String selectQuery = "SELECT * FROM tc_fcd_file " +
-                " WHERE tc_fcd001 in ('" + g_dk + "') " +
-                " ORDER BY tc_fcd001,tc_fcd002 ";
-
-        return db.rawQuery(selectQuery, null);
     }
 
     public class InsertDataTask extends AsyncTask<String, Integer, Integer> {
@@ -258,6 +248,31 @@ public class Create_Table {
             db.insert(TABLE_NAME_TC_FCA, null, args);
         } catch (Exception e) {
         }
+    }
+
+    public Cursor getdata_tc_fcd(String g_factory) {
+        String g_dk;
+        if (g_factory == "DH") {
+            g_dk = "'01','02','03'";
+        } else {
+            g_dk = "'04'";
+        }
+
+        String selectQuery = "SELECT * FROM tc_fcd_file " +
+                " WHERE tc_fcd001 in (" + g_dk + ") " +
+                " ORDER BY tc_fcd001,tc_fcd002 ";
+
+        return db.rawQuery(selectQuery, null);
+    }
+
+    public Cursor departmentCheckedData() {
+        String selectQuery = " SELECT 0,tc_fcd004||' '||tc_fcd005 AS donvi , SUM((CASE WHEN tc_fce006 = 'true' THEN 1 ELSE 0 end)) slerr  ,tc_fce002,tc_fce003,tc_fce004 " +
+                " FROM tc_fce_file,tc_fcd_file " +
+                " WHERE tc_fcd006=tc_fce004 " +
+                " GROUP BY  tc_fcd004||' '||tc_fcd005,tc_fce002,tc_fce003,tc_fce004 " +
+                " ORDER BY tc_fce002 DESC,tc_fce004,tc_fce003 ";
+
+        return db.rawQuery(selectQuery, null);
     }
 
     /*KT01*/

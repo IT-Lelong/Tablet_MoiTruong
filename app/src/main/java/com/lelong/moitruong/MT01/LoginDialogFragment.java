@@ -52,12 +52,13 @@ public class LoginDialogFragment extends DialogFragment {
         Spinner sp_factory = view.findViewById(R.id.sp_factory);
         Spinner sp_department = view.findViewById(R.id.sp_department);
 
-        List<String> itemList = new ArrayList<>();
+        List<String> factory_List = new ArrayList<>();
+        List<String> department_List = new ArrayList<>();
         //itemList.add("");
-        itemList.add("Đức Hòa");
-        itemList.add("Bến Lức");
+        factory_List.add("Đức Hòa");
+        factory_List.add("Bến Lức");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, itemList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, factory_List);
         sp_factory.setAdapter(adapter);
         sp_factory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -77,7 +78,10 @@ public class LoginDialogFragment extends DialogFragment {
                 if (cur_getdata.getCount() > 0 ) {
                     cur_getdata.moveToFirst();
                     for(int i = 0 ; i < cur_getdata.getCount();i++){
-
+                        String g_ten = cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd004"));
+                        String g_xuong = cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd005"));
+                        String materialInfo = g_ten + " - " + g_xuong;
+                        department_List.add(materialInfo);
                         cur_getdata.moveToNext();
                     }
                 }

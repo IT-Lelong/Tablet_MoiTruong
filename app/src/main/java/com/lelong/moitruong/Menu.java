@@ -2,6 +2,7 @@ package com.lelong.moitruong;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.lelong.moitruong.MT01.KiemTraActivity;
 import com.lelong.moitruong.MT01.LoginDialogFragment;
 
 import org.json.JSONException;
@@ -250,8 +252,11 @@ public class Menu extends AppCompatActivity implements Call_interface {
             switch (v.getId()) {
 
                 case R.id.btn_MT01: {
-                    LoginDialogFragment dialogFragment = new LoginDialogFragment();
-                    dialogFragment.show(getSupportFragmentManager(), "MyDialogFragment");
+                    //LoginDialogFragment dialogFragment = new LoginDialogFragment();
+                    //dialogFragment.show(getSupportFragmentManager(), "MyDialogFragment");
+                    Intent mt01_intent = new Intent();
+                    mt01_intent.setClass(Menu.this, KiemTraActivity.class);
+                    startActivity(mt01_intent);
                     break;
                 }
 

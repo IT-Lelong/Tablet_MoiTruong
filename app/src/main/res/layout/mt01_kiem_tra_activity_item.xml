@@ -24,14 +24,6 @@
         android:hint="Đơn vị" />
 
     <TextView
-        android:id="@+id/tv_loi"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:hint="lỗi" />
-
-    <TextView
         android:id="@+id/tv_ngay"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -39,8 +31,16 @@
         android:gravity="center"
         android:hint="Ngày" />
 
+    <TextView
+        android:id="@+id/tv_loi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:hint="lỗi" />
+
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/img_galery"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
