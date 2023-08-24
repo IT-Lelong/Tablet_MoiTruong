@@ -32,6 +32,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".MT01.HangMucKiemTra"
+            android:exported="false" />
+        <activity
             android:name=".MT01.KiemTraActivity"
             android:exported="false" />
 
