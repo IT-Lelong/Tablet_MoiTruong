@@ -23,12 +23,16 @@ public class Create_Table {
     String TABLE_NAME_TC_FCC = "tc_fcc_file"; //TB Mã hạng mục chi tiết (hạng mục con)
     String TABLE_NAME_TC_FCD = "tc_fcd_file"; //TB Mã bộ phận
     String TABLE_NAME_TC_FCE = "tc_fce_file"; //TB Dữ liệu đã kiểm tra
+    String TABLE_NAME_TC_FCQ = "tc_fcq_file"; //TB Dữ liệu nhân viên kiểm 5S
+    String TABLE_NAME_TC_FCF = "tc_fcf_file"; //TB Dữ liệu thông tin ảnh lỗi
 
     String CREATE_TABLE_TC_FCA = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCA + " (tc_fca001 TEXT, tc_fca002 TEXT, tc_fca003 TEXT, tc_fca004 TEXT )";
     String CREATE_TABLE_TC_FCB = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCB + " (tc_fcb001 TEXT, tc_fcb002 TEXT, tc_fcb003 TEXT, tc_fcb004 TEXT, tc_fcb005 TEXT )";
     String CREATE_TABLE_TC_FCC = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCC + " (tc_fcc001 TEXT, tc_fcc002 TEXT, tc_fcc003 TEXT, tc_fcc004 TEXT, tc_fcc005 TEXT, tc_fcc006 TEXT, tc_fcc007 TEXT, tc_fcc008 TEXT )";
     String CREATE_TABLE_TC_FCD = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCD + " (tc_fcd001 TEXT, tc_fcd002 TEXT, tc_fcd003 TEXT, tc_fcd004 TEXT, tc_fcd005 TEXT, tc_fcd006 TEXT )";
-    String CREATE_TABLE_TC_FCE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCE + " (tc_fce001 TEXT, tc_fce002 TEXT, tc_fce003 TEXT, tc_fce004 TEXT, tc_fce005 TEXT, tc_fce006 TEXT, tc_fce007 TEXT, tc_fce008 TEXT )";
+    String CREATE_TABLE_TC_FCE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCE + " (tc_fce001 TEXT, tc_fce002 TEXT, tc_fce003 TEXT, tc_fce004 TEXT, tc_fce005 TEXT, tc_fce006 TEXT, tc_fce007 TEXT, tc_fce008 TEXT , tc_fcepost TEXT )";
+    String CREATE_TABLE_TC_FCQ = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCQ + " (tc_fcq001 TEXT, cpf02 TEXT, ta_cpf001 TEXT, cpf29 TEXT, gem02 TEXT, cpf281 TEXT)";
+    String CREATE_TABLE_TC_FCF = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TC_FCF + " (tc_fcf001 TEXT, tc_fcf002 TEXT, tc_fcf003 TEXT, tc_fcf004 TEXT, tc_fcf005 TEXT, tc_fcfpost TEXT)";
 
     public void setInsertCallback(Call_interface callback) {
         this.callInterface = callback;
@@ -49,6 +53,8 @@ public class Create_Table {
             db.execSQL(CREATE_TABLE_TC_FCC);
             db.execSQL(CREATE_TABLE_TC_FCD);
             db.execSQL(CREATE_TABLE_TC_FCE);
+            db.execSQL(CREATE_TABLE_TC_FCQ);
+            db.execSQL(CREATE_TABLE_TC_FCF);
         } catch (Exception e) {
 
         }
@@ -61,11 +67,15 @@ public class Create_Table {
             String DROP_TABLE_NAME_TC_FCC = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCC;
             String DROP_TABLE_NAME_TC_FCD = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCD;
             String DROP_TABLE_NAME_TC_FCE = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCE;
+            String DROP_TABLE_NAME_TC_FCQ = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCQ;
+            String DROP_TABLE_NAME_TC_FCF = "DROP TABLE IF EXISTS " + TABLE_NAME_TC_FCF;
             db.execSQL(DROP_TABLE_NAME_TC_FCA);
             db.execSQL(DROP_TABLE_NAME_TC_FCB);
             db.execSQL(DROP_TABLE_NAME_TC_FCC);
             db.execSQL(DROP_TABLE_NAME_TC_FCD);
             db.execSQL(DROP_TABLE_NAME_TC_FCE);
+            db.execSQL(DROP_TABLE_NAME_TC_FCQ);
+            db.execSQL(DROP_TABLE_NAME_TC_FCF);
             db.close();
         } catch (Exception e) {
         }
@@ -76,6 +86,12 @@ public class Create_Table {
         db.delete(TABLE_NAME_TC_FCB, null, null);
         db.delete(TABLE_NAME_TC_FCC, null, null);
         db.delete(TABLE_NAME_TC_FCD, null, null);
+        db.delete(TABLE_NAME_TC_FCQ, null, null);
+    }
+
+    public void delete_DataTable() {
+        db.delete(TABLE_NAME_TC_FCE, null, null);
+        db.delete(TABLE_NAME_TC_FCF, null, null);
     }
 
     public class InsertDataTask extends AsyncTask<String, Integer, Integer> {
@@ -164,6 +180,24 @@ public class Create_Table {
                             }
                             break;
                         }
+
+                        case "tc_fcq": {
+                            try {
+                                jsonObject = jsonArray.getJSONObject(i);
+                                String g_tc_fcq001 = jsonObject.getString("TC_FCQ001");
+                                String g_cpf02 = jsonObject.getString("CPF02");
+                                String g_ta_cpf001 = jsonObject.getString("TA_CPF001");
+                                String g_cpf29 = jsonObject.getString("CPF29");
+                                String g_gem02 = jsonObject.getString("GEM02");
+                                String g_cpf281 = jsonObject.getString("CPF281");
+
+                                insert_fcq(g_tc_fcq001, g_cpf02, g_ta_cpf001, g_cpf29, g_gem02, g_cpf281);
+
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
+                        }
                     }
                     // Cập nhật tiến độ
                     progress = (int) (((i + 1) / (float) totalItems) * 100);
@@ -189,8 +223,62 @@ public class Create_Table {
                 callInterface.ImportData_onInsertComplete("OK");
             }
         }
+    }
 
+    public void call_insertPhotoData(String selectedDetail, String selectedDate, String selectedDepartment, String g_user, String fileName) {
 
+        try {
+            ContentValues args = new ContentValues();
+            args.put("tc_fcf001", selectedDetail);
+            args.put("tc_fcf002", selectedDate);
+            args.put("tc_fcf003", selectedDepartment);
+            args.put("tc_fcf004", g_user);
+            args.put("tc_fcf005", fileName);
+            args.put("tc_fcfpost", "N");
+            db.insert(TABLE_NAME_TC_FCF, null, args);
+
+            //Cập nhật table chứ dữ liệu đã kiểm tra
+            call_update_tc_fce(selectedDetail, selectedDate, selectedDepartment, g_user);
+        } catch (Exception e) {
+        }
+    }
+
+    private void call_update_tc_fce(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
+        String g_tc_fce008;
+        Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
+                " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                " AND tc_fce002 ='" + selectedDate + "' " +
+                " AND tc_fce003 ='" + g_user + "' " +
+                " AND tc_fce004 = '" + selectedDepartment + "' ", null);
+        ;
+        if (c.moveToFirst()) {
+            g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) + 1);
+
+            db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' , tc_fce006 = 'true' " +
+                    " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                    " AND tc_fce002 ='" + selectedDate + "'" +
+                    " AND tc_fce003 = '" + g_user + "'" +
+                    " AND tc_fce004 = '" + selectedDepartment + "' ");
+        } else {
+            //'1' : Số lượng ảnh lỗi đầu tiên
+            //'N' : Trạng thái chưa chuyển đến server
+            db.execSQL(" INSERT INTO tc_fce_file VALUES('" + selectedDetail + "', '" + selectedDate + "', '" + g_user + "','" + selectedDepartment + "','false','true','','1','N')");
+        }
+        c.close();
+    }
+
+    private void insert_fcq(String g_tc_fcq001, String g_cpf02, String g_ta_cpf001, String g_cpf29, String g_gem02, String g_cpf281) {
+        try {
+            ContentValues args = new ContentValues();
+            args.put("tc_fcq001", g_tc_fcq001);
+            args.put("cpf02", g_cpf02);
+            args.put("ta_cpf001", g_ta_cpf001);
+            args.put("cpf29", g_cpf29);
+            args.put("gem02", g_gem02);
+            args.put("cpf281", g_cpf281);
+            db.insert(TABLE_NAME_TC_FCQ, null, args);
+        } catch (Exception e) {
+        }
     }
 
     private void insert_fcd(String g_tc_fcd001, String g_tc_fcd002, String g_tc_fcd003,
@@ -250,6 +338,19 @@ public class Create_Table {
         }
     }
 
+    public Cursor getUserData(String g_UserID) {
+        String selectQuery = "SELECT * FROM tc_fcq_file WHERE tc_fcq001 = '" + g_UserID + "' ";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    public int checkUserData(String g_UserID) {
+        Cursor c = db.rawQuery("SELECT count(*) FROM tc_fcq_file WHERE tc_fcq001 = '" + g_UserID + "'", null);
+        c.moveToFirst();
+        Integer tcount = c.getInt(0);
+        c.close();
+        return tcount;
+    }
+
     public Cursor getdata_tc_fcd(String g_factory) {
         String g_dk;
         if (g_factory == "DH") {
@@ -275,20 +376,76 @@ public class Create_Table {
         return db.rawQuery(selectQuery, null);
     }
 
-    /*KT01*/
-    /*public Cursor getAll_tc_fab() {
-        Cursor a;
-        try {
-           //a  = db.query(TABLE_NAME_TC_FAB, new String[]{"rowid _id", tc_fab001,tc_fab002,tc_fab003,tc_fab004}
-           //        , null, null, null, null, tc_fab002 + " DESC", null) ;
-            // a = db.rawQuery("SELECT * FROM " + TABLE_NAME_TC_FAB + " WHERE tc_fab001='KT01'", null);
+    public Cursor getHangMucLon() {
+        String selectQuery = " SELECT tc_fcb003,tc_fcb004,tc_fcb005  FROM tc_fcb_file WHERE tc_fcb003 BETWEEN '01' AND '08' ORDER BY tc_fcb003 ";
+        return db.rawQuery(selectQuery, null);
+    }
 
-            //SQLiteDatabase db = this.getWritableDatabase();
-            String selectQuery = "SELECT * FROM " + TABLE_NAME_TC_FAB + " WHERE tc_fab001='KT01'";
-            return db.rawQuery(selectQuery, null);
+    public Cursor getHangMucChiTiet(int g_position, String g_ngay, String g_maBP, String userID) {
+        String g_hangmuc = String.format("%02d", g_position + 1);
 
-        } catch (Exception e) {
-            return null;
+        String selectQuery = " SELECT tc_fcc004, tc_fcc005, tc_fcc006, tc_fcc007, tc_fcc008, tc_fce003, tc_fce007,  COALESCE(tc_fce008, 0 )  AS tc_fce008, " +
+                "    CASE WHEN tc_fce006 = 'true' THEN 'false' ELSE 'true' END AS tc_fce006 " +
+                " FROM    tc_fcc_file" +
+                " LEFT JOIN    tc_fce_file ON tc_fcc005 = tc_fce001 AND tc_fce004 = '" + g_maBP + "' AND tc_fce002 = '" + g_ngay + "' AND tc_fce003 = '" + userID + "' " +
+                " WHERE    tc_fcc003 = '" + g_hangmuc + "'" +
+                " ORDER BY  tc_fcc005";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    public void upd_GhiChu(String g_ngay, String g_maBP, String g_tc_fcc005, String g_User, String inputData) {
+        Cursor c = db.rawQuery("SELECT count(*) FROM tc_fce_file " +
+                " WHERE tc_fce001 = '" + g_tc_fcc005 + "' " +
+                " AND tc_fce002 = '" + g_ngay + "' " +
+                " AND tc_fce003 = '" + g_User + "' " +
+                " AND tc_fce004 = '" + g_maBP + "' ", null);
+        c.moveToFirst();
+        Integer tcount = c.getInt(0);
+        c.close();
+
+        if (tcount == 0) {
+            db.execSQL(" INSERT INTO tc_fce_file VALUES('" + g_tc_fcc005 + "', '" + g_ngay + "', '" + g_User + "','" + g_maBP + "','false','false','" + inputData + "','0')");
+        } else {
+            db.execSQL(" UPDATE tc_fce_file SET tc_fce007 = '" + inputData + "' " +
+                    " WHERE tc_fce001 = '" + g_tc_fcc005 + "' " +
+                    " AND tc_fce002 = '" + g_ngay + "' " +
+                    " AND tc_fce003 = '" + g_User + "' " +
+                    " AND tc_fce004 = '" + g_maBP + "' ");
         }
-    }*/
+    }
+
+    public Cursor getTc_fce_Upload(String input_bdate, String input_edate, String input_department) {
+        //Lấy dữ liệu tc_fce_file update tới máy chủ Oracle
+        String selectQuery = " SELECT * FROM tc_fce_file WHERE 1=1 ";
+        if (input_bdate.isEmpty() && input_edate.isEmpty() && input_department.isEmpty()) {
+            selectQuery += " AND tc_fcepost = 'N' ";
+        }
+        if (!input_department.isEmpty()) {
+            selectQuery += " AND tc_fce004 = '" + input_department + "' ";
+        }
+        if (!input_bdate.isEmpty() && !input_edate.isEmpty()) {
+            selectQuery += " AND tc_fce002 BETWEEN '" + input_bdate + "' AND '" + input_edate + "'";
+        }
+        selectQuery += " ORDER BY tc_fce002,tc_fce004,tc_fce001 ";
+
+        return db.rawQuery(selectQuery, null);
+    }
+
+    public Cursor getTc_fcf_Upload(String input_bdate, String input_edate, String input_department) {
+        //Lấy dữ liệu tc_fcf_file update tới máy chủ Oracle
+        String selectQuery = " SELECT * FROM tc_fcf_file WHERE 1=1 ";
+        if (input_bdate.isEmpty() && input_edate.isEmpty() && input_department.isEmpty()) {
+            selectQuery += " AND tc_fcfpost = 'N' ";
+        }
+        if (!input_department.isEmpty()) {
+            selectQuery += " AND tc_fcf003 = '" + input_department + "' ";
+        }
+        if (!input_bdate.isEmpty() && !input_edate.isEmpty()) {
+            selectQuery += " AND tc_fcf002 BETWEEN '" + input_bdate + "' AND '" + input_edate + "'";
+        }
+        selectQuery += " ORDER BY tc_fcf002,tc_fcf003,tc_fcf001 ";
+
+        return db.rawQuery(selectQuery, null);
+    }
+
 }

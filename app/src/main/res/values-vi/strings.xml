@@ -13,6 +13,13 @@
     <string name="tt_kho">Kho</string>
     <string name="tt_solo">Số lô</string>
     <string name="tt_soluong">Số lượng</string>
+    <string name="tt_trangthai">Trạng thái</string>
+    <string name="tt_tenhangmuc">Thuyết minh hạng mục</string>
+    <string name="tt_ngay">Ngày</string>
+    <string name="tt_thoigian">Thời gian</string>
+    <string name="tt_bophan">Bộ phận</string>
+    <string name="tt_ghichu">Ghi chú</string>
+    <string name="tt_stt">STT</string>
 
     /*Menu Button*/
     <string name="btn_5S">Thi đua 5S</string>
@@ -44,4 +51,9 @@
     <string name="E01">Tài khoản hoặc mật khẩu không đúng</string>
     <string name="E02">Liên kết máy chủ thất bại</string>
     <string name="E10">Xin nhập số tài khoản</string>
+
+    /*****************************************************/
+    <string name="tt_soluongAnh">Số lượng ảnh</string>
+    <string name="tt_tinhnang">Tính năng</string>
+
 </resources>

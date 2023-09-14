@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<paths>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
     <external-path
         name="download"
         path="." />
+
+    <!-- Đường dẫn đến thư mục Download -->
     <external-files-path
         name="Download"
         path="." />
+
+    <!-- Đường dẫn đến thư mục external_files -->
+    <!--<external-files-path
+        name="external_files"
+        path="External" /> -->
+
 </paths>

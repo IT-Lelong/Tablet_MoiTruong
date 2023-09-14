@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -51,7 +52,7 @@ public class Menu extends AppCompatActivity implements Call_interface {
     Dialog dialog;
     TextView tv_syncName;
     ProgressBar progressBar;
-    private String[] tasks = {"tc_fca", "tc_fcb", "tc_fcc", "tc_fcd"};
+    private String[] tasks = {"tc_fca", "tc_fcb", "tc_fcc", "tc_fcd", "tc_fcq"};
     private int currentIndex = 0;
 
     @Override
@@ -141,6 +142,17 @@ public class Menu extends AppCompatActivity implements Call_interface {
                             Toast alert = Toast.makeText(Menu.this, e.toString(), Toast.LENGTH_LONG);
                             alert.show();
                         }
+                    }else{
+                        Cursor cursor = Cre_db.getUserData(ID);
+                        if(cursor.getCount() > 0) {
+                            cursor.moveToFirst();
+                            Constant_Class.UserID = ID;
+                            Constant_Class.UserName_zh = cursor.getString(cursor.getColumnIndexOrThrow("CPF02"));
+                            Constant_Class.UserName_vn = cursor.getString(cursor.getColumnIndexOrThrow("TA_CPF001"));
+                            Constant_Class.UserDepID = cursor.getString(cursor.getColumnIndexOrThrow("CPF29"));
+                            Constant_Class.UserDepName = cursor.getString(cursor.getColumnIndexOrThrow("GEM02"));
+                            Constant_Class.UserFactory = cursor.getString(cursor.getColumnIndexOrThrow("CPF281"));
+                        }
                     }
                 }
             });
@@ -157,9 +169,9 @@ public class Menu extends AppCompatActivity implements Call_interface {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String g_status;
         switch (item.getItemId()) {
             case R.id.refresh_datatable:
+
                 Cre_db.delete_table();
                 dialog = new Dialog(this);
                 dialog.setContentView(R.layout.data_sync_layout);
@@ -170,6 +182,10 @@ public class Menu extends AppCompatActivity implements Call_interface {
                 currentIndex = 0;
                 runNextTask();
                 dialog.show();
+                break;
+
+            case R.id.clear_data:
+                Cre_db.delete_DataTable();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -184,7 +200,6 @@ public class Menu extends AppCompatActivity implements Call_interface {
             dialog.dismiss();
         }
     }
-
 
     private void Import_Data(String g_table) {
         String baseUrl = "http://172.16.40.20/" + Constant_Class.server + "/HSEAPP/";

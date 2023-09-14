@@ -5,4 +5,8 @@
         android:id="@+id/refresh_datatable"
         android:title="@string/Change_Data"/>
 
+    <item
+        android:id="@+id/clear_data"
+        android:title="Xóa dữ liệu kiểm tra"/>
+
 </menu>
