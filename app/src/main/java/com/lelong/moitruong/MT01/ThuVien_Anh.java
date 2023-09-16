@@ -1,64 +1,47 @@
 package com.lelong.moitruong.MT01;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import android.os.Environment;
-
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import com.lelong.moitruong.MT01.ThuVien_Anh_Adapter;
+
 
 public class ThuVien_Anh extends AppCompatActivity {
-    private Create_Table Cre_db = null;
-    private ViewPager2 viewPager;
-    private TabLayout dotsLayout;
 
+    private RecyclerView recyclerView;
+    private ThuVien_Anh_Adapter adapter;
     String selectedDate,selectedDepartment,selectedDetail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mt01_thu_vien_anh_activity);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
-        Cre_db = new Create_Table(this);
-        Cre_db.open();
-
-        addControls();
-        addEvents();
-    }
-
-    private void addEvents() {
-        List<File> imageFiles = getImageFiles(); // Lấy danh sách tập tin ảnh từ thư mục bộ nhớ
-        ThuVien_Anh_Adapter adapter = new ThuVien_Anh_Adapter(imageFiles);
-        viewPager.setAdapter(adapter);
-
-        new TabLayoutMediator(dotsLayout, viewPager,
-                (tab, position) -> {}).attach();
-    }
-
-    private void addControls() {
         Intent intent = getIntent();
         selectedDate = intent.getStringExtra("ngay");
         selectedDepartment = intent.getStringExtra("bophan");
         selectedDetail = intent.getStringExtra("hangmuc");
+        recyclerView = findViewById(R.id.recyclerView);
 
-        viewPager = findViewById(R.id.viewPager);
-        dotsLayout = findViewById(R.id.dotsLayout);
+        // Tạo danh sách các ảnh
+        List<File> imageFiles = getImageFiles();
+        // Thêm thêm ảnh vào danh sách theo nhu cầu
+
+        // Thiết lập Adapter và LayoutManager cho RecyclerView
+        adapter = new ThuVien_Anh_Adapter(this,imageFiles);
+        recyclerView.setAdapter(adapter);
+
+        // Cài đặt GridLayoutManager với 3 cột
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
-
     private List<File> getImageFiles() {
         String[] targetKeywords = {selectedDate, selectedDepartment, selectedDetail}; // Các từ khóa mà bạn quan tâm
         List<File> imageFiles = new ArrayList<>();
@@ -85,7 +68,6 @@ public class ThuVien_Anh extends AppCompatActivity {
 
         return imageFiles;
     }
-
     private boolean isImageFile(File file) {
         String name = file.getName();
         return name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png");
