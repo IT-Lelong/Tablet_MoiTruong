@@ -116,7 +116,7 @@ public class KiemTraActivity_Transfer {
                     String message = jsonObject.get("message").getAsString();
 
                     if (status.equals("success")) {
-
+                        //Hàm lấy ảnh và gửi ảnh
                         transferPhoto = new TransferPhoto(context,c_getTc_fcf);
 
                     } else {
