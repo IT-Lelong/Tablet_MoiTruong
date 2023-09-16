@@ -46,6 +46,10 @@
         <activity
             android:name=".MT01.KiemTraActivity"
             android:exported="false" />
+        <activity
+            android:name=".MT01.ImageDetailActivity"
+            android:exported="false" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -447,5 +447,22 @@ public class Create_Table {
 
         return db.rawQuery(selectQuery, null);
     }
+    public void delete_Image(String name) {
+        try {
+            db.execSQL("DELETE FROM tc_fcf_file WHERE tc_fcf005 = '"+ name +"' ");
+        } catch (Exception e) {
+            String ex = e.getMessage().toString();
+        }
+
+    }
+
+      //  try {
+       //     db.execSQL("UPDATE KT04_04_file SET " + g_col + "='" + g_noidung + "' " +
+       //             " WHERE KT04_04_002='" + g_date + "' " +
+       //             " AND KT04_04_003 = '" + g_ca + "' ");
+       // } catch (Exception e) {
+       //     String ex = e.getMessage().toString();
+        //}
+   // }
 
 }
