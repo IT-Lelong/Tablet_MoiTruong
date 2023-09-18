@@ -69,14 +69,6 @@ public class KiemTraActivity_Transfer {
 
     private void Call_transfer() {
         //Khi sử dụng Retrofit cần sử dụng thư viện Json của Google , không nên dùng thư viện Json của Java
-
-        /*
-        "{"jarr_tc_fce":[{"tc_fce001":"MT01010103","tc_fce002":"2023-09-06","tc_fce003":"H23275","tc_fce004":"0101A","tc_fce005":"false","tc_fce006":"true","tc_fce007":"","tc_fce008":"2","tc_fcepost":"N"}],
-
-        "jarr_tc_fcf":[{"tc_fcf001":"MT01010103","tc_fcf002":"2023-09-06","tc_fcf003":"0101A","tc_fcf004":"H23275","tc_fcf005":"0101A_MT01010103_H23275_2023-09-06_140854.png","tc_fcfpost":"N"},
-                       {"tc_fcf001":"MT01010103","tc_fcf002":"2023-09-06","tc_fcf003":"0101A","tc_fcf004":"H23275","tc_fcf005":"0101A_MT01010103_H23275_2023-09-06_140856.png","tc_fcfpost":"N"}]}"
-        */
-
         Cursor c_getTc_fce = Cre_db.getTc_fce_Upload(input_bdate, input_edate, input_department); //Hạng mục vi phạm
         Cursor c_getTc_fcf = Cre_db.getTc_fcf_Upload(input_bdate, input_edate, input_department); //Ảnh hạng mục vi phạm
 

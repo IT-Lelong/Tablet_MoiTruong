@@ -92,7 +92,7 @@ public class OpenCamera extends AppCompatActivity {
         String timestamp = new SimpleDateFormat("HHmmss", Locale.getDefault()).format(new Date());
         String fileName = selectedDepartment + "_" + selectedDetail + "_" + g_User + "_" + selectedDate + "_" + timestamp + ".png";
 
-        File newDirectory = new File(getExternalMediaDirs()[0],selectedDate.replace("-",""));
+        File newDirectory = new File(getExternalMediaDirs()[0], selectedDate.replace("-", ""));
 
         if (!newDirectory.exists()) {
             newDirectory.mkdirs(); //Tạo thư mục
