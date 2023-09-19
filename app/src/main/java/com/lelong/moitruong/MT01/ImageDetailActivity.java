@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,8 @@ import com.lelong.moitruong.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ImageDetailActivity extends AppCompatActivity {
 
@@ -73,6 +76,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_delete:
                 // Xử lý sự kiện xóa ảnh tại vị trí hiện tại
+
                 deleteImageAtPosition(currentPosition);
                 return true;
             default:
@@ -85,30 +89,32 @@ public class ImageDetailActivity extends AppCompatActivity {
         if (imageFile.exists()) {
             boolean deleted = imageFile.delete();
             if (deleted) {
-                // Xóa thành công
+                Toast.makeText(this, "Xóa thành công!", Toast.LENGTH_SHORT).show();
                 return true;
             } else {
-                // Xóa không thành công
+                Toast.makeText(this, "Xóa không thành công!", Toast.LENGTH_SHORT).show();
                 return false;
             }
         } else {
-            // Tệp ảnh không tồn tại
+            Toast.makeText(this, "Tệp ảnh không tồn tại!", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
+
     // Phương thức xóa ảnh tại vị trí hiện tại
     private void deleteImageAtPosition(int position) {
         // Xóa ảnh tại vị trí position từ danh sách imageUrls
         if (position >= 0 && position < imageFiles.size()) {
             Cre_db.delete_Image(imageFiles.get(position).getName());
-            deleteImageByPath(imageFiles.get(position).getName());
-
+            String datePath = getDate(imageFiles.get(position).getAbsolutePath());
+            String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + datePath.replace("-", "") + "/" + imageFiles.get(position).getName();
+            deleteImageByPath(image_path);
             imageFiles.remove(position);
+            pagerAdapter.notifyDataSetChanged();
             Intent intent = getIntent();
             selectedDate = intent.getStringExtra("ngay");
             selectedDepartment = intent.getStringExtra("bophan");
             selectedDetail = intent.getStringExtra("hangmuc");
-
             // Cập nhật ViewPager sau khi xóa ảnh
             //pagerAdapter.notifyDataSetChanged();
             // Kiểm tra xem còn ảnh nào trong danh sách không
@@ -137,6 +143,16 @@ public class ImageDetailActivity extends AppCompatActivity {
                 //}
             }
         }
+    }
+    public String getDate(String name) {
+        String date = null;
+        String regex = "\\d{4}-\\d{2}-\\d{2}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        while (matcher.find()) {
+            date = matcher.group();
+        }
+        return date;
     }
 
 }

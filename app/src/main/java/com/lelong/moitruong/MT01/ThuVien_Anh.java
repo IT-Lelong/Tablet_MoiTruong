@@ -73,6 +73,9 @@ public class ThuVien_Anh extends AppCompatActivity {
         //List<File> imageFiles = getImageFiles();
         //adapter = new ThuVien_Anh_Adapter(this,imageFiles);
         //recyclerView.setAdapter(adapter);
+        List<ImageGroup> imageGroup = generateSampleData();
+        adapter = new ThuVien_Anh_Adapter(this,imageGroup);
+        recyclerView.setAdapter(adapter);
     }
 
     private List<File> getImageFiles() {
@@ -129,9 +132,11 @@ public class ThuVien_Anh extends AppCompatActivity {
                 String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + tc_fcf002.replace("-", "") + "/" + tc_fcf005;
                 File file = new File(image_path);  // Thay thế bằng đường dẫn thực tế của tệp ảnh
                 searchImage.add(file);
+                getImage.moveToNext();
             }
             ImageGroup imageGroup = new ImageGroup(tc_fcf002, bophan,tc_fcf001, searchImage);
             imageGroups.add(imageGroup);
+            getGroup.moveToNext();
         }
 
 
