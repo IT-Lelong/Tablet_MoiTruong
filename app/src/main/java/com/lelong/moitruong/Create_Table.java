@@ -455,14 +455,40 @@ public class Create_Table {
         }
 
     }
+    public Cursor getGroup(String date,String bophan, String hangmuc) {
+        String selectQuery = " SELECT DISTINCT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcd004,tc_fcd005 FROM tc_fcf_file,tc_fcd_file WHERE tc_fcd006 = tc_fcf003 ";
+        if (date.isEmpty() && bophan.isEmpty() && hangmuc.isEmpty()) {
+            selectQuery += " AND tc_fcfpost = 'N' ";
+        }
+        if (!bophan.isEmpty()) {
+            selectQuery += " AND tc_fcf001 = '" + bophan + "' ";
+        }
+        if (!date.isEmpty()) {
+            selectQuery += " AND tc_fcf002 = '" + date + "'";
+        }
+        if (!hangmuc.isEmpty()) {
+            selectQuery += " AND tc_fcf003 = '" + hangmuc + "'";
+        }
+        selectQuery += " ORDER BY tc_fcf002,tc_fcf003,tc_fcf001 ";
+        return db.rawQuery(selectQuery, null);
+    }
+    public Cursor getImage(String date,String bophan, String hangmuc) {
+        String selectQuery = " SELECT tc_fcf005 FROM tc_fcf_file WHERE 1=1 ";
+        if (date.isEmpty() && bophan.isEmpty() && hangmuc.isEmpty()) {
+            selectQuery += " AND tc_fcfpost = 'N' ";
+        }
+        if (!bophan.isEmpty()) {
+            selectQuery += " AND tc_fcf001 = '" + bophan + "' ";
+        }
+        if (!date.isEmpty()) {
+            selectQuery += " AND tc_fcf002 = '" + date + "'";
+        }
+        if (!hangmuc.isEmpty()) {
+            selectQuery += " AND tc_fcf003 = '" + hangmuc + "'";
+        }
+        selectQuery += " ORDER BY tc_fcf005 ";
+        return db.rawQuery(selectQuery, null);
+    }
 
-      //  try {
-       //     db.execSQL("UPDATE KT04_04_file SET " + g_col + "='" + g_noidung + "' " +
-       //             " WHERE KT04_04_002='" + g_date + "' " +
-       //             " AND KT04_04_003 = '" + g_ca + "' ");
-       // } catch (Exception e) {
-       //     String ex = e.getMessage().toString();
-        //}
-   // }
 
 }

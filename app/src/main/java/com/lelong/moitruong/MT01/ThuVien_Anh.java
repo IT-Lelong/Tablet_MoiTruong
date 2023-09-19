@@ -4,11 +4,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -20,11 +22,14 @@ import com.lelong.moitruong.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ThuVien_Anh extends AppCompatActivity {
     private Create_Table Cre_db = null;
     private RecyclerView recyclerView;
     private ThuVien_Anh_Adapter adapter;
+    private DateGridAdapter dateAdapter;
     private ViewPager2 viewPager;
     private TabLayout dotsLayout;
 
@@ -45,26 +50,29 @@ public class ThuVien_Anh extends AppCompatActivity {
         selectedDepartment = intent.getStringExtra("bophan");
         selectedDetail = intent.getStringExtra("hangmuc");
         recyclerView = findViewById(R.id.recyclerView);
+        //recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // Tạo danh sách các ảnh
-        List<File> imageFiles = getImageFiles();
+        //List<File> imageFiles = getImageFiles();
         // Thêm thêm ảnh vào danh sách theo nhu cầu
-
+        List<ImageGroup> imageGroup = generateSampleData();
         // Thiết lập Adapter và LayoutManager cho RecyclerView
-        adapter = new ThuVien_Anh_Adapter(this,imageFiles);
+        adapter = new ThuVien_Anh_Adapter(this,imageGroup);
         recyclerView.setAdapter(adapter);
 
         // Cài đặt GridLayoutManager với 3 cột
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setLayoutManager(gridLayoutManager);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        List<File> imageFiles = getImageFiles();
-        adapter = new ThuVien_Anh_Adapter(this,imageFiles);
-        recyclerView.setAdapter(adapter);
+        //List<File> imageFiles = getImageFiles();
+        //adapter = new ThuVien_Anh_Adapter(this,imageFiles);
+        //recyclerView.setAdapter(adapter);
     }
 
     private List<File> getImageFiles() {
@@ -99,4 +107,53 @@ public class ThuVien_Anh extends AppCompatActivity {
         return name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png");
         // Thêm các định dạng ảnh khác tương ứng
     }
+    private List<ImageGroup> generateSampleData() {
+        List<File> imageFiles = getImageFiles();
+        List<ImageGroup> imageGroups = new ArrayList<>();
+        Cursor getGroup = Cre_db.getGroup(selectedDate, selectedDetail,selectedDepartment);
+        getGroup.moveToFirst();
+        //Open FOR
+        int a = getGroup.getCount();
+        for (int i = 0; i < getGroup.getCount(); i++) {
+            String tc_fcf001 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcf001"));
+            String tc_fcf002 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcf002"));
+            String tc_fcf003 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcf003"));
+            String tc_fcd004 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcd004"));
+            String tc_fcd005 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcd005"));
+            String bophan = tc_fcf003 + "- " + tc_fcd004 + " " + tc_fcd005;
+            List <File> searchImage= new ArrayList<>();
+            Cursor getImage = Cre_db.getImage(tc_fcf002, tc_fcf001, tc_fcf003);
+            getImage.moveToFirst();
+            for (int x = 0; x < getImage.getCount(); x++) {
+                String tc_fcf005 = getImage.getString(getImage.getColumnIndexOrThrow("tc_fcf005"));
+                String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + tc_fcf002.replace("-", "") + "/" + tc_fcf005;
+                File file = new File(image_path);  // Thay thế bằng đường dẫn thực tế của tệp ảnh
+                searchImage.add(file);
+            }
+            ImageGroup imageGroup = new ImageGroup(tc_fcf002, bophan,tc_fcf001, searchImage);
+            imageGroups.add(imageGroup);
+        }
+
+
+        // Tạo các nhóm ảnh mẫu
+        //for (int i = 0; i < imageFiles.size(); i++) {
+           // String date = getDate(imageFiles.get(i).getName());
+           // String department = selectedDepartment;
+           // ImageGroup imageGroup = new ImageGroup(date, department, imageFiles);
+           // imageGroups.add(imageGroup);
+        //}
+
+        return imageGroups;
+    }
+    public String getDate(String name) {
+        String date = null;
+        String regex = "\\d{4}-\\d{2}-\\d{2}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        while (matcher.find()) {
+            date = matcher.group();
+        }
+        return date;
+    }
+
 }

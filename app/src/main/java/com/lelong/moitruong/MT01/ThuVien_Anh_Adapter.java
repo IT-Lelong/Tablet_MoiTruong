@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,78 +17,54 @@ import com.bumptech.glide.Glide;
 import com.lelong.moitruong.MainActivity;
 import com.lelong.moitruong.Menu;
 import com.lelong.moitruong.R;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ThuVien_Anh_Adapter extends RecyclerView.Adapter<ThuVien_Anh_Adapter.ViewHolder> {
-
-    private List<File> imageFiles;
+public class ThuVien_Anh_Adapter extends RecyclerView.Adapter<ThuVien_Anh_Adapter.ImageGroupViewHolder> {
+    private List<ImageGroup> imageGroups;
     private Context context;
 
-    public ThuVien_Anh_Adapter(Context context, List<File> imageFiles) {
+    public ThuVien_Anh_Adapter(Context context, List<ImageGroup> imageGroups) {
         this.context = context;
-        this.imageFiles = imageFiles;
+        this.imageGroups = imageGroups;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mt01_thu_vien_anh_item_image, parent, false);
-        return new ViewHolder(view);
+    public ImageGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.mt1_thu_vien_anh_group, parent, false);
+        return new ImageGroupViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int getAdapterPosition) {
-        //File imageFile = imageFiles.get(position);
-        // Sử dụng Glide để tải và hiển thị hình ảnh
-        int adapterPosition = holder.getAdapterPosition(); // Lấy vị trí của mục
+    public void onBindViewHolder(@NonNull ImageGroupViewHolder holder, int position) {
+        ImageGroup imageGroup = imageGroups.get(position);
+        holder.tv_date.setText(imageGroup.getDate());
+        holder.tv_department.setText(imageGroup.getDepartment());
+        holder.tv_hangmuc.setText(imageGroup.getHangmuc());
 
-        if (adapterPosition != RecyclerView.NO_POSITION) {
-            File imageFile = imageFiles.get(adapterPosition);
-            Glide.with(context).load(imageFile).into(holder.imageView);
-        }
-        //Glide.with(context).load(imageFile).into(holder.imageView);
-        // Xử lý sự kiện khi người dùng click vào ảnh
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int clickedPosition = holder.getAdapterPosition(); // Lấy lại vị trí của mục khi được click
-
-                if (clickedPosition != RecyclerView.NO_POSITION) {
-                    // Thực hiện hành động mở ảnh lớn ở đây
-                    // Sử dụng clickedPosition để xác định mục đã click
-                    ArrayList<Uri> imageUris = new ArrayList<>();
-                    //for (File imageFile : imageFiles) {
-                    //    Uri imageUri = Uri.fromFile(imageFile);
-                    //    imageUris.add(imageUri);
-                    //}
-                    ArrayList<String> imagePathList = new ArrayList<>();
-                    for (File imageFile : imageFiles) {
-                        imagePathList.add(imageFile.getAbsolutePath());
-                    }
-                    Intent intent = new Intent(context, ImageDetailActivity.class);
-                    //intent.putParcelableArrayListExtra("imageUris", imageUris);
-                    intent.putStringArrayListExtra("imagePaths", imagePathList);
-                    intent.putExtra("position", clickedPosition);
-                    context.startActivity(intent);
-
-                }
-            }
-        });
+        // Tạo Adapter con cho RecyclerView trong nhóm ảnh
+        DateGridAdapter imageAdapter = new DateGridAdapter(context,imageGroup.getImage());
+        holder.rv_image.setAdapter(imageAdapter);
     }
 
     @Override
     public int getItemCount() {
-        return imageFiles.size();
+        return imageGroups.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+    public static class ImageGroupViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_date;
+        TextView tv_department;
+        TextView tv_hangmuc;
+        RecyclerView rv_image;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ImageGroupViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
+            tv_date = itemView.findViewById(R.id.tv_date);
+            tv_department = itemView.findViewById(R.id.tv_department);
+            tv_hangmuc = itemView.findViewById(R.id.tv_hangmuc);
+            rv_image = itemView.findViewById(R.id.rv_image);
         }
     }
 }
