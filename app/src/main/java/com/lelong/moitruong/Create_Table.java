@@ -489,6 +489,95 @@ public class Create_Table {
         selectQuery += " ORDER BY tc_fcf005 ";
         return db.rawQuery(selectQuery, null);
     }
+    public void update_imagecount(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
+        String g_tc_fce008;
+        Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
+                " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                " AND tc_fce002 ='" + selectedDate + "' " +
+                " AND tc_fce003 ='" + g_user + "' " +
+                " AND tc_fce004 = '" + selectedDepartment + "' ", null);
+        c.moveToFirst();
+            g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) - 1);
 
+            db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' " +
+                    " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                    " AND tc_fce002 ='" + selectedDate + "'" +
+                    " AND tc_fce003 = '" + g_user + "'" +
+                    " AND tc_fce004 = '" + selectedDepartment + "' ");
+        c.close();
+    }
+    public Cursor get_Thongtin_Anh(String name) {
+        String selectQuery = " SELECT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcf004 FROM tc_fcf_file WHERE 1=1 ";
+        if (!name.isEmpty()) {
+            selectQuery += " AND tc_fcf005 = '" + name + "' ";
+        }
+        selectQuery += " ORDER BY tc_fcf002,tc_fcf003,tc_fcf001 ";
+        return db.rawQuery(selectQuery, null);
+    }
+    public Cursor get_hangmucchitiet(int g_positionlon, String g_positioncon) {
+        String g_hangmuc = String.format("%02d", g_positionlon + 1);
+        String selectQuery = " SELECT tc_fcc005,tc_fcc006,tc_fcc007 FROM tc_fcc_file WHERE tc_fcc003 = '" + g_hangmuc + "'   ";
+        if (!g_positioncon.isEmpty()){
+            String g_hangmuccon = String.format("%02d", Integer.parseInt(g_positioncon) + 1);
+            selectQuery += " AND tc_fcc004 = '" + g_hangmuccon + "' ";
+        }
+        selectQuery += " ORDER BY  tc_fcc005 ";
+        return db.rawQuery(selectQuery, null);
+    }
+    public void update_MoveImage(String nameold, String namenew, String chitiet, String bophan) {
+        db.execSQL("UPDATE tc_fcf_file SET tc_fcf001 = '"+ chitiet +"' , tc_fcf003 = '"+ bophan +"', " +
+                " tc_fcf005 = '"+ namenew +"' WHERE tc_fcf005='"+ nameold+ "' ");
+    }
+    public void update_move(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
+        String g_tc_fce008;
+        Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
+                " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                " AND tc_fce002 ='" + selectedDate + "' " +
+                " AND tc_fce003 ='" + g_user + "' " +
+                " AND tc_fce004 = '" + selectedDepartment + "' ", null);
+        ;
+        if (c.moveToFirst()) {
+            g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) - 1);
+            if (Integer.parseInt(g_tc_fce008) == 0)
+            {
+                db.execSQL("DELETE FROM tc_fce_file " +
+                        " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                        " AND tc_fce002 ='" + selectedDate + "'" +
+                        " AND tc_fce003 = '" + g_user + "'" +
+                        " AND tc_fce004 = '" + selectedDepartment + "' ");
+            }
+            else{
+                db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' " +
+                        " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                        " AND tc_fce002 ='" + selectedDate + "'" +
+                        " AND tc_fce003 = '" + g_user + "'" +
+                        " AND tc_fce004 = '" + selectedDepartment + "' ");
+            }
+        }
+        c.close();
+    }
+    public void update_movenewImage(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
+        String g_tc_fce008;
+        Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
+                " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                " AND tc_fce002 ='" + selectedDate + "' " +
+                " AND tc_fce003 ='" + g_user + "' " +
+                " AND tc_fce004 = '" + selectedDepartment + "' ", null);
+        ;
+        if (c.moveToFirst()) {
+            g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) + 1);
+
+            db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' , tc_fce006 = 'true' " +
+                    " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                    " AND tc_fce002 ='" + selectedDate + "'" +
+                    " AND tc_fce003 = '" + g_user + "'" +
+                    " AND tc_fce004 = '" + selectedDepartment + "' ");
+        } else {
+            //'1' : Số lượng ảnh lỗi đầu tiên
+            //'N' : Trạng thái chưa chuyển đến server
+            db.execSQL(" INSERT INTO tc_fce_file VALUES('" + selectedDetail + "', '" + selectedDate + "', '" + g_user + "','" + selectedDepartment + "','false','true','','1','N')");
+        }
+        c.close();
+    }
 
 }

@@ -1,9 +1,11 @@
 package com.lelong.moitruong.MT01;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,11 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.lelong.moitruong.Constant_Class;
 import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
 
@@ -26,21 +30,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ImageDetailActivity extends AppCompatActivity {
-
+public class ImageDetailActivity extends AppCompatActivity implements MoveDialog.OnDialogResultListener {
     private ViewPager viewPager;
     private ImagePagerAdapter pagerAdapter;
     private ThuVien_Anh_Adapter thuVienAnhAdapter;
-    private ArrayList<File> imageFiles; // Danh sách File của các tệp hình ảnh
+    private ArrayList<File> imageFiles;
     ArrayList<String> imagePathList;
     private int currentPosition;
     ActionBar actionBar;
     private Create_Table Cre_db = null;
-    String selectedDate,selectedDepartment,selectedDetail;
+    String selectedDate,selectedDepartment,selectedDetail,g_result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //ActionBar actionBar = getSupportActionBar();
-        //actionBar.hide();
         Cre_db = new Create_Table(this);
         Cre_db.open();
         actionBar = getSupportActionBar();
@@ -64,7 +65,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         viewPager.setCurrentItem(currentPosition);
 
     }
-    //Khởi tạo menu trên thanh tiêu đề (S)
+    //Khởi tạo menu trên thanh tiêu đề
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.image_context_menu, menu);
@@ -76,13 +77,40 @@ public class ImageDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_delete:
                 // Xử lý sự kiện xóa ảnh tại vị trí hiện tại
-
+                int currentPosition = viewPager.getCurrentItem();
                 deleteImageAtPosition(currentPosition);
                 return true;
+            case R.id.action_move:
+                int position = viewPager.getCurrentItem();
+                String myVariable = imageFiles.get(position).getName();
+                MoveDialog moveDialog = new MoveDialog();
+                moveDialog.setMyVariable(myVariable);
+                moveDialog.callback = this;
+                moveDialog.show(getSupportFragmentManager(), "MoveDialog");
+
             default:
                 return super.onContextItemSelected(item);
         }
     }
+    @Override
+    public void onDialogResult(String result) {
+        g_result = result;
+        int position = viewPager.getCurrentItem();
+        if (g_result == "Y"){
+            imageFiles.remove(position);
+            pagerAdapter = new ImagePagerAdapter(this, imageFiles);
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.setCurrentItem(position);
+            pagerAdapter.notifyDataSetChanged();
+            if (imageFiles.isEmpty()) {
+                // Nếu không còn ảnh, kết thúc Activity hoặc thực hiện hành động tùy ý
+                finish(); // Kết thúc Activity
+            } else {
+                viewPager.setCurrentItem(position);
+            }
+        }
+    }
+
     public boolean deleteImageByPath(String imagePath) {
         File imageFile = new File(imagePath);
 
@@ -105,42 +133,33 @@ public class ImageDetailActivity extends AppCompatActivity {
     private void deleteImageAtPosition(int position) {
         // Xóa ảnh tại vị trí position từ danh sách imageUrls
         if (position >= 0 && position < imageFiles.size()) {
+            Cursor get_Thongtin_Anh =Cre_db.get_Thongtin_Anh(imageFiles.get(position).getName());
+            get_Thongtin_Anh.moveToFirst();
+            String tc_fcf001= null,tc_fcf002=null,tc_fcf003=null,tc_fcf004=null;
+            for (int i = 0; i < get_Thongtin_Anh.getCount(); i++) {
+                tc_fcf001 = get_Thongtin_Anh.getString(get_Thongtin_Anh.getColumnIndexOrThrow("tc_fcf001"));
+                tc_fcf002 = get_Thongtin_Anh.getString(get_Thongtin_Anh.getColumnIndexOrThrow("tc_fcf002"));
+                tc_fcf003 = get_Thongtin_Anh.getString(get_Thongtin_Anh.getColumnIndexOrThrow("tc_fcf003"));
+                tc_fcf004 = get_Thongtin_Anh.getString(get_Thongtin_Anh.getColumnIndexOrThrow("tc_fcf004"));
+            }
             Cre_db.delete_Image(imageFiles.get(position).getName());
             String datePath = getDate(imageFiles.get(position).getAbsolutePath());
             String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + datePath.replace("-", "") + "/" + imageFiles.get(position).getName();
             deleteImageByPath(image_path);
             imageFiles.remove(position);
-            pagerAdapter.notifyDataSetChanged();
+            pagerAdapter = new ImagePagerAdapter(this, imageFiles);
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.setCurrentItem(currentPosition);
             Intent intent = getIntent();
             selectedDate = intent.getStringExtra("ngay");
             selectedDepartment = intent.getStringExtra("bophan");
             selectedDetail = intent.getStringExtra("hangmuc");
-            // Cập nhật ViewPager sau khi xóa ảnh
-            //pagerAdapter.notifyDataSetChanged();
-            // Kiểm tra xem còn ảnh nào trong danh sách không
+            Cre_db.update_imagecount(tc_fcf001, tc_fcf002, tc_fcf003, tc_fcf004);
+            pagerAdapter.notifyDataSetChanged();
             if (imageFiles.isEmpty()) {
-                // Nếu không còn ảnh, kết thúc Activity hoặc thực hiện hành động tùy ý
                 finish(); // Kết thúc Activity
             } else {
-                // Nếu còn ảnh, hiển thị ảnh tiếp theo hoặc ảnh trước đó
-                int newPosition = position;
-                newPosition = currentPosition + 1;
-                if (newPosition < imageFiles.size()) {
-                    // Nếu vị trí mới nằm trong phạm vi danh sách ảnh, thì hiển thị ảnh tiếp theo
-                    viewPager.setCurrentItem(newPosition);
-                    currentPosition = newPosition;
-                }else{
-                    newPosition = currentPosition - 1;
-                    if (newPosition >= 0) {
-                        // Nếu vị trí mới nằm trong phạm vi danh sách ảnh, thì hiển thị ảnh trước đó
-                        viewPager.setCurrentItem(newPosition);
-                        currentPosition = newPosition;
-                    }
-                }
-                //if (newPosition >= imageFiles.size()) {
-                //    newPosition = imageFiles.size() - 1;
-                //    viewPager.setCurrentItem(position);
-                //}
+                 viewPager.setCurrentItem(currentPosition);
             }
         }
     }
