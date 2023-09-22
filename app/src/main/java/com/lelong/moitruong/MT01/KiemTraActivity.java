@@ -10,14 +10,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
+
+import java.util.ArrayList;
 
 public class KiemTraActivity extends AppCompatActivity {
     private Create_Table Cre_db = null;
     RecyclerView rcv_kiemtra;
     Button btn_kiemtra, btn_KetChuyen, btn_TraCuu;
     private KiemTraActivity_RecyclerViewAdapter kiemTraActivity_recyclerViewAdapter;
+    private PieChart pieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +65,41 @@ public class KiemTraActivity extends AppCompatActivity {
         btn_kiemtra = findViewById(R.id.btn_kiemtra);
         btn_KetChuyen = findViewById(R.id.btn_KetChuyen);
         btn_TraCuu = findViewById(R.id.btn_TraCuu);
+        pieChart = findViewById(R.id.pieChart);
+
+        call_completeChart();
 
         rcv_kiemtra.setLayoutManager(new LinearLayoutManager(this));
         Cursor cursor = Cre_db.departmentCheckedData();
         kiemTraActivity_recyclerViewAdapter = new KiemTraActivity_RecyclerViewAdapter(cursor);
         rcv_kiemtra.setAdapter(kiemTraActivity_recyclerViewAdapter);
+    }
+
+    private void call_completeChart() {
+        //Cursor cursor = Cre_db.getChartCompleteData();
+        // Tạo danh sách dữ liệu cho biểu đồ
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        // Lấy dữ liệu từ cơ sở dữ liệu và thêm vào danh sách entries
+        float completedPercentage = 60.0f; // Tỷ lệ hoàn thành (%)
+        float remainingPercentage = 100.0f - completedPercentage; // Tỷ lệ chưa hoàn thành
+
+        entries.add(new PieEntry(completedPercentage, "OK"));
+        entries.add(new PieEntry(remainingPercentage, "NG"));
+
+        // Tạo PieDataSet từ danh sách dữ liệu
+        PieDataSet dataSet = new PieDataSet(entries, "Tiến độ Kiểm tra 5S");
+        dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        dataSet.setValueTextSize(18f); // Đặt cỡ chữ thành 16
+
+        // Tạo PieData từ PieDataSet
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter(pieChart));
+
+        // Thiết lập dữ liệu cho biểu đồ và cấu hình biểu đồ
+        pieChart.setData(data);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setUsePercentValues(true);
+        pieChart.invalidate(); // Cập nhật biểu đồ
     }
 
     private void Call_showTranferDialog() {
@@ -85,4 +124,6 @@ public class KiemTraActivity extends AppCompatActivity {
         });
         TransferDialog.show();
     }
+
+
 }

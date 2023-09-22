@@ -94,6 +94,11 @@ public class Create_Table {
         db.delete(TABLE_NAME_TC_FCF, null, null);
     }
 
+    /*public Cursor getChartCompleteData() {
+
+        return
+    }*/
+
     public class InsertDataTask extends AsyncTask<String, Integer, Integer> {
         int progress;
         private ProgressBar progressBar;

@@ -60,8 +60,10 @@ dependencies {
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
 
-    implementation "jp.wasabeef:recyclerview-animators:4.0.1"
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
     implementation 'com.google.code.gson:gson:2.8.8'
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
 
 }

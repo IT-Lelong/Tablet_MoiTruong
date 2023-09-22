@@ -8,68 +8,83 @@
     android:orientation="vertical"
     tools:context=".MT01.KiemTraActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:orientation="horizontal">
 
-        <TextView
-            style="@style/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="STT"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart"
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
 
-        <TextView
-            style="@style/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Don vi"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            style="@style/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Ngay"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <TextView
-            style="@style/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Lỗi"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+                <TextView
+                    style="@style/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="STT"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            style="@style/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Anh"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+                <TextView
+                    style="@style/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Don vi"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ngay"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="Lỗi"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="Anh"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_kiemtra"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
     </LinearLayout>
+
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcv_kiemtra"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="100dp" />
 
         <View
             android:id="@+id/view"
@@ -77,7 +92,7 @@
             android:layout_height="50dp"
             android:layout_gravity="bottom"
             android:background="@drawable/rectangle_rounded_top"
-            android:backgroundTint="@color/MidnightGreen"/>
+            android:backgroundTint="@color/MidnightGreen" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,35 +104,32 @@
 
             <Button
                 android:id="@+id/btn_KetChuyen"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#f5f5dc"
-                android:elevation="50dp"
-                android:text="Chuyển"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginEnd="100dp"
+                android:background="@drawable/button_oval_shadow"
+                android:text="Tải"
                 android:textColor="@color/Brown"
-                android:textSize="15sp"
-                android:layout_marginEnd="100dp"/>
+                android:textSize="30sp" />
 
             <Button
                 android:id="@+id/btn_kiemtra"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginEnd="100dp"
                 android:background="@drawable/button_oval_shadow"
-                android:elevation="150dp"
                 android:text="5S"
                 android:textColor="@color/Brown"
-                android:textSize="30sp"
-                android:layout_marginEnd="100dp"/>
+                android:textSize="30sp" />
 
             <Button
                 android:id="@+id/btn_TraCuu"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#f5f5dc"
-                android:elevation="50dp"
-                android:text="Tra cứu"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/button_oval_shadow"
+                android:text="Tra"
                 android:textColor="@color/Brown"
-                android:textSize="15sp" />
+                android:textSize="30sp" />
 
             <!-- <androidx.cardview.widget.CardView
             android:layout_width="80dp"
