@@ -58,6 +58,13 @@ public class KiemTraActivity extends AppCompatActivity {
                 dialogFragment.show(getSupportFragmentManager(), "LoginDialogFragment");
             }
         });
+        btn_TraCuu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Search_Dialog search_dialog = new Search_Dialog();
+                search_dialog.show(getSupportFragmentManager(), "Search_Dialog");
+            }
+        });
     }
 
     private void addControls() {

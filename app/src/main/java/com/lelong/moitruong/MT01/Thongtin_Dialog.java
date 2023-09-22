@@ -71,7 +71,7 @@ public class Thongtin_Dialog extends DialogFragment {
         tv_hmchitiet2 = view.findViewById(R.id.tv_hmchitiet2);
         tv_hmchitiet3 = view.findViewById(R.id.tv_hmchitiet3);
         tv_tenhinh = view.findViewById(R.id.tv_tenhinh);
-        btnOk = view.findViewById(R.id.btnOk);
+        //btnOk = view.findViewById(R.id.btnOk);
 
         cur_getdata =Cre_db.get_ImageInfo(myVariable);
         cur_getdata.moveToFirst();
@@ -105,12 +105,6 @@ public class Thongtin_Dialog extends DialogFragment {
         tv_tenhinh.setText(g_tc_fcf005);
         tv_maH.setText(g_maH);
 
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
     }
 }
 
