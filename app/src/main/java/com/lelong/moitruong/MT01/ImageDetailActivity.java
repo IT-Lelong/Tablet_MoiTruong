@@ -80,7 +80,7 @@ public class ImageDetailActivity extends AppCompatActivity implements MoveDialog
                 // Xử lý sự kiện xóa ảnh tại vị trí hiện tại
                 int currentPosition = viewPager.getCurrentItem();
                 deleteImageAtPosition(currentPosition);
-                break;
+                return true;
             case R.id.action_move:
                 position = viewPager.getCurrentItem();
                 String myVariable = imageFiles.get(position).getName();
@@ -88,16 +88,15 @@ public class ImageDetailActivity extends AppCompatActivity implements MoveDialog
                 moveDialog.setMyVariable(myVariable);
                 moveDialog.callback = this;
                 moveDialog.show(getSupportFragmentManager(), "MoveDialog");
-                break;
             case R.id.action_info:
                 position = viewPager.getCurrentItem();
                 String value = imageFiles.get(position).getName();
                 Thongtin_Dialog thongtin_dialog = new Thongtin_Dialog();
                 thongtin_dialog.setMyVariable(value);
                 thongtin_dialog.show(getSupportFragmentManager(), "Thongtin_Dialog");
-                break;
+            default:
+                return super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
     }
     @Override
     public void onDialogResult(String result) {

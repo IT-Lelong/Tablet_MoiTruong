@@ -111,16 +111,16 @@ public class MoveDialog extends DialogFragment {
         hm_kiemtra.setAdapter(kiemtra_adapter);
         sp_bophan.setAdapter(bophan_adapter);
         String xuong= null;
-        /*String g_user = Constant_Class.UserID;
+        String g_user = Constant_Class.UserID;
         Cursor getXuong = Cre_db.getUserData(g_user);
         getXuong.moveToFirst();
         for (int i = 0; i < getXuong.getCount(); i++) {
             xuong = getXuong.getString(getXuong.getColumnIndexOrThrow("cpf281"));
             getXuong.moveToNext();
-        }*/
+        }
         //cur_getdata = Cre_db.getdata_tc_fcd("DH");
         cur_getbophan = null;
-        cur_getbophan = Cre_db.getdata_tc_fcd(Constant_Class.UserFactory);
+        cur_getbophan = Cre_db.getdata_tc_fcd("DH");
         if (cur_getbophan.getCount() > 0) {
             cur_getbophan.moveToFirst();
             for (int i = 0; i < cur_getbophan.getCount(); i++) {

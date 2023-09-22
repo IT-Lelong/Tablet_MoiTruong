@@ -133,7 +133,7 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
         holder.img_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(context, "GALLERY " + adapterPosition, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "GALLERY " + adapterPosition, Toast.LENGTH_SHORT).show();
                 String g_tc_fcc005 = hangmucChiTiet_list.get(adapterPosition).getG_tc_fcc005();
 
                 Intent intent = new Intent(context, ThuVien_Anh.class);
