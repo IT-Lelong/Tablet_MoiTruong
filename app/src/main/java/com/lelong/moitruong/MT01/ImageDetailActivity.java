@@ -74,6 +74,7 @@ public class ImageDetailActivity extends AppCompatActivity implements MoveDialog
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int position;
         switch (item.getItemId()) {
             case R.id.action_delete:
                 // Xử lý sự kiện xóa ảnh tại vị trí hiện tại
@@ -81,13 +82,18 @@ public class ImageDetailActivity extends AppCompatActivity implements MoveDialog
                 deleteImageAtPosition(currentPosition);
                 return true;
             case R.id.action_move:
-                int position = viewPager.getCurrentItem();
+                position = viewPager.getCurrentItem();
                 String myVariable = imageFiles.get(position).getName();
                 MoveDialog moveDialog = new MoveDialog();
                 moveDialog.setMyVariable(myVariable);
                 moveDialog.callback = this;
                 moveDialog.show(getSupportFragmentManager(), "MoveDialog");
-
+            case R.id.action_info:
+                position = viewPager.getCurrentItem();
+                String value = imageFiles.get(position).getName();
+                Thongtin_Dialog thongtin_dialog = new Thongtin_Dialog();
+                thongtin_dialog.setMyVariable(value);
+                thongtin_dialog.show(getSupportFragmentManager(), "Thongtin_Dialog");
             default:
                 return super.onContextItemSelected(item);
         }

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background= "#e7ebda"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rectangle_rounded_bottom"
+            android:backgroundTint="@color/MidnightGreen"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="Thông tin"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tt_ngay"
+                android:textStyle="bold"
+                android:textColor="@color/MidnightGreen"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/tv_ngay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="18sp"
+                android:hint="yyyy/MM/dd" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tt_bophan"
+                android:textStyle="bold"
+                android:textColor="@color/MidnightGreen"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/tv_bophan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="18sp"
+                android:hint="Bộ phận" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Người kiểm tra"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/MidnightGreen"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/tv_maH"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="18sp"
+                android:hint="Người kiểm tra" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:text="Hạng mục kiểm tra"
+                android:textStyle="bold"
+                android:textColor="@color/MidnightGreen"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/tv_hmlon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="18sp"
+                android:hint="Hạng mục kiểm tra" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:text="Hạng mục chi tiết"
+                android:textColor="@color/MidnightGreen"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_hmchitiet1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:padding="1dp"
+                    android:hint="Hạng mục chi tiết" />
+                <TextView
+                    android:id="@+id/tv_hmchitiet2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:padding="1dp"
+                    android:hint="" />
+                <TextView
+                    android:id="@+id/tv_hmchitiet3"
+                    android:layout_width="match_parent"
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:hint="" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:text="Tên"
+                android:textStyle="bold"
+                android:textColor="@color/MidnightGreen"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/tv_tenhinh"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="18sp"
+                android:hint="Tên" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

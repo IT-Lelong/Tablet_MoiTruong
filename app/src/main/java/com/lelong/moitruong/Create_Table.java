@@ -579,5 +579,16 @@ public class Create_Table {
         }
         c.close();
     }
+    public Cursor get_ImageInfo(String name) {
+        String selectQuery = " SELECT tc_fcb004,tc_fcb005,tc_fcc005,tc_fcc006,tc_fcc007,tc_fcd003," +
+                " tc_fcd004,tc_fcd005,tc_fcf002,tc_fcf005,tc_fcq001,cpf02,ta_cpf001  FROM tc_fcc_file,tc_fcf_file," +
+                " tc_fcb_file,tc_fcd_file,tc_fcq_file  WHERE tc_fcc005=tc_fcf001 AND tc_fcb001=tc_fcc001" +
+                " AND tc_fcd006 = tc_fcf003 AND tc_fcb002=tc_fcc002 AND tc_fcb003= tc_fcc003 AND tc_fcq001 = tc_fcf004 ";
+        if (!name.isEmpty()){
+            selectQuery += " AND tc_fcf005='"+ name +"' ";
+        }
+        selectQuery += " ORDER BY  tc_fcc005 ";
+        return db.rawQuery(selectQuery, null);
+    }
 
 }
