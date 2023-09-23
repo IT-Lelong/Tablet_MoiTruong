@@ -358,7 +358,7 @@ public class Create_Table {
 
     public Cursor getdata_tc_fcd(String g_factory) {
         String g_dk;
-        if (g_factory == "DH") {
+        if (g_factory.equals("DH")) {
             g_dk = "'01','02','03'";
         } else {
             g_dk = "'04'";

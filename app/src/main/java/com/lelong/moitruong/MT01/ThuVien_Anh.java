@@ -42,7 +42,6 @@ public class ThuVien_Anh extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
         Cre_db = new Create_Table(this);
         Cre_db.open();
         Intent intent = getIntent();
@@ -123,7 +122,10 @@ public class ThuVien_Anh extends AppCompatActivity {
             String tc_fcf003 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcf003"));
             String tc_fcd004 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcd004"));
             String tc_fcd005 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcd005"));
+            String tc_fcc006 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc006"));
+            String tc_fcc007 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc007"));
             String bophan = tc_fcf003 + "- " + tc_fcd004 + " " + tc_fcd005;
+            String hangmuc = tc_fcf001 + " - " + tc_fcc007;
             List <File> searchImage= new ArrayList<>();
             Cursor getImage = Cre_db.getImage(tc_fcf002, tc_fcf001, tc_fcf003);
             getImage.moveToFirst();
@@ -134,7 +136,7 @@ public class ThuVien_Anh extends AppCompatActivity {
                 searchImage.add(file);
                 getImage.moveToNext();
             }
-            ImageGroup imageGroup = new ImageGroup(tc_fcf002, bophan,tc_fcf001, searchImage);
+            ImageGroup imageGroup = new ImageGroup(tc_fcf002, bophan,hangmuc, searchImage);
             imageGroups.add(imageGroup);
             getGroup.moveToNext();
         }
@@ -142,10 +144,10 @@ public class ThuVien_Anh extends AppCompatActivity {
 
         // Tạo các nhóm ảnh mẫu
         //for (int i = 0; i < imageFiles.size(); i++) {
-           // String date = getDate(imageFiles.get(i).getName());
-           // String department = selectedDepartment;
-           // ImageGroup imageGroup = new ImageGroup(date, department, imageFiles);
-           // imageGroups.add(imageGroup);
+        // String date = getDate(imageFiles.get(i).getName());
+        // String department = selectedDepartment;
+        // ImageGroup imageGroup = new ImageGroup(date, department, imageFiles);
+        // imageGroups.add(imageGroup);
         //}
 
         return imageGroups;
