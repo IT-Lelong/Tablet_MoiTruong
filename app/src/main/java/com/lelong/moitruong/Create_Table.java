@@ -94,11 +94,6 @@ public class Create_Table {
         db.delete(TABLE_NAME_TC_FCF, null, null);
     }
 
-    /*public Cursor getChartCompleteData() {
-
-        return
-    }*/
-
     public class InsertDataTask extends AsyncTask<String, Integer, Integer> {
         int progress;
         private ProgressBar progressBar;
@@ -596,4 +591,15 @@ public class Create_Table {
         return db.rawQuery(selectQuery, null);
     }
 
+    public float getChartCompleteData() {
+        float g_comp = 0;
+        //select max(tc_fcd002) max_tc_fcd002  from tc_fcd_filemColumns = {String[1]@33400} ["g_count"]
+        String selectQuery = " select round((CAST(count(DISTINCT tc_fce004) as REAL) / (select max(tc_fcd002) max_tc_fcd002 from tc_fcd_file ) ) * 100   ,2)  g_count " +
+                             " from tc_fce_file " +
+                             " where tc_fce002 = (select max(tc_fce002) from tc_fce_file)  ";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        g_comp = cursor.getFloat(0);
+        return g_comp;
+    }
 }

@@ -83,12 +83,13 @@ public class KiemTraActivity extends AppCompatActivity {
     }
 
     private void call_completeChart() {
-        //Cursor cursor = Cre_db.getChartCompleteData();
+        float g_completed = Cre_db.getChartCompleteData();
         // Tạo danh sách dữ liệu cho biểu đồ
         ArrayList<PieEntry> entries = new ArrayList<>();
         // Lấy dữ liệu từ cơ sở dữ liệu và thêm vào danh sách entries
-        float completedPercentage = 60.0f; // Tỷ lệ hoàn thành (%)
-        float remainingPercentage = 100.0f - completedPercentage; // Tỷ lệ chưa hoàn thành
+        float completedPercentage = g_completed; // Tỷ lệ hoàn thành (%)
+        float remainingPercentage = 100.00f - completedPercentage; // Tỷ lệ chưa hoàn thành
+
 
         entries.add(new PieEntry(completedPercentage, "OK"));
         entries.add(new PieEntry(remainingPercentage, "NG"));
@@ -96,7 +97,7 @@ public class KiemTraActivity extends AppCompatActivity {
         // Tạo PieDataSet từ danh sách dữ liệu
         PieDataSet dataSet = new PieDataSet(entries, "Tiến độ Kiểm tra 5S");
         dataSet.setColors(ColorTemplate.PASTEL_COLORS);
-        dataSet.setValueTextSize(18f); // Đặt cỡ chữ thành 16
+        dataSet.setValueTextSize(20f); // Đặt cỡ chữ thành 16
 
         // Tạo PieData từ PieDataSet
         PieData data = new PieData(dataSet);
