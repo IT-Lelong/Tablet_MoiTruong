@@ -50,6 +50,7 @@ public class KiemTraActivity_RecyclerViewAdapter extends RecyclerView.Adapter<Ki
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                holder.itemView.setBackgroundResource(R.drawable.item_selector);
                 int clickedPosition = holder.getAdapterPosition();
                 cursor.moveToPosition(clickedPosition);
                 String g_donvi = cursor.getString(cursor.getColumnIndexOrThrow("donvi"));
