@@ -367,10 +367,10 @@ public class Create_Table {
     }
 
     public Cursor departmentCheckedData() {
-        String selectQuery = " SELECT 0,tc_fcd004||' '||tc_fcd005 AS donvi , SUM((CASE WHEN tc_fce006 = 'true' THEN 1 ELSE 0 end)) slerr  ,tc_fce002,tc_fce003,tc_fce004 " +
+        String selectQuery = " SELECT 0,tc_fcd004||' '||tc_fcd005 AS donvi ,tc_fcd003, SUM((CASE WHEN tc_fce006 = 'true' THEN 1 ELSE 0 end)) slerr  ,tc_fce002,tc_fce004 " +
                 " FROM tc_fce_file,tc_fcd_file " +
                 " WHERE tc_fcd006=tc_fce004 " +
-                " GROUP BY  tc_fcd004||' '||tc_fcd005,tc_fce002,tc_fce003,tc_fce004 " +
+                " GROUP BY  tc_fcd004||' '||tc_fcd005,tc_fcd003,tc_fce002,tc_fce004 " +
                 " ORDER BY tc_fce002 DESC,tc_fce004,tc_fce003 ";
 
         return db.rawQuery(selectQuery, null);
@@ -384,11 +384,12 @@ public class Create_Table {
     public Cursor getHangMucChiTiet(int g_position, String g_ngay, String g_maBP, String userID) {
         String g_hangmuc = String.format("%02d", g_position + 1);
 
-        String selectQuery = " SELECT tc_fcc004, tc_fcc005, tc_fcc006, tc_fcc007, tc_fcc008, tc_fce003, tc_fce007,  COALESCE(tc_fce008, 0 )  AS tc_fce008, " +
+        String selectQuery = " SELECT tc_fcc004, tc_fcc005, tc_fcc006, tc_fcc007, tc_fcc008, tc_fce007,  COALESCE(SUM(tc_fce008), 0 )  AS tc_fce008, " +
                 "    CASE WHEN tc_fce006 = 'true' THEN 'false' ELSE 'true' END AS tc_fce006 " +
                 " FROM    tc_fcc_file" +
-                " LEFT JOIN    tc_fce_file ON tc_fcc005 = tc_fce001 AND tc_fce004 = '" + g_maBP + "' AND tc_fce002 = '" + g_ngay + "' AND tc_fce003 = '" + userID + "' " +
+                " LEFT JOIN    tc_fce_file ON tc_fcc005 = tc_fce001 AND tc_fce004 = '" + g_maBP + "' AND tc_fce002 = '" + g_ngay + "'  " +
                 " WHERE    tc_fcc003 = '" + g_hangmuc + "'" +
+                " GROUP BY tc_fcc004, tc_fcc005, tc_fcc006, tc_fcc007, tc_fcc008, tc_fce007 " +
                 " ORDER BY  tc_fcc005";
         return db.rawQuery(selectQuery, null);
     }
@@ -591,15 +592,12 @@ public class Create_Table {
         return db.rawQuery(selectQuery, null);
     }
 
-    public float getChartCompleteData() {
-        float g_comp = 0;
+    public Cursor getChartCompleteData() {
         //select max(tc_fcd002) max_tc_fcd002  from tc_fcd_filemColumns = {String[1]@33400} ["g_count"]
-        String selectQuery = " select round((CAST(count(DISTINCT tc_fce004) as REAL) / (select max(tc_fcd002) max_tc_fcd002 from tc_fcd_file ) ) * 100   ,2)  g_count " +
-                             " from tc_fce_file " +
-                             " where tc_fce002 = (select max(tc_fce002) from tc_fce_file)  ";
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        g_comp = cursor.getFloat(0);
-        return g_comp;
+        String selectQuery = " select tc_fce004, tc_fcd004,tc_fcd005, round((CAST(sum(tc_fce008) as REAL) / (select sum(tc_fce008) total from tc_fce_file where tc_fce002 = (select max(tc_fce002) from tc_fce_file)) ) * 100   ,2)  g_count " +
+                             " from tc_fce_file ,tc_fcd_file " +
+                             " where tc_fcd006= tc_fce004 and tc_fce002 = (select max(tc_fce002) from tc_fce_file)  group by tc_fce004  ";
+
+        return db.rawQuery(selectQuery, null);
     }
 }

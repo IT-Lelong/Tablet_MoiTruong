@@ -10,13 +10,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:orientation="horizontal">
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
-            android:layout_width="300dp"
-            android:layout_height="300dp" />
+            android:layout_width="400dp"
+            android:layout_height="400dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -1,12 +1,16 @@
 package com.lelong.moitruong.MT01;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.Image;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +19,11 @@ import com.lelong.moitruong.R;
 
 public class KiemTraActivity_RecyclerViewAdapter extends RecyclerView.Adapter<KiemTraActivity_RecyclerViewAdapter.ViewHolder> {
     private Cursor cursor;
+    private Context context;
 
-    public KiemTraActivity_RecyclerViewAdapter(Cursor cursor) {
+    public KiemTraActivity_RecyclerViewAdapter(Context context,Cursor cursor) {
         this.cursor = cursor;
+        this.context = context;
     }
     @NonNull
     @Override
@@ -41,6 +47,31 @@ public class KiemTraActivity_RecyclerViewAdapter extends RecyclerView.Adapter<Ki
         holder.tv_donvi.setText(g_donvi);
         holder.tv_ngay.setText(g_ngay);
         holder.tv_loi.setText(g_error);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int clickedPosition = holder.getAdapterPosition();
+                cursor.moveToPosition(clickedPosition);
+                String g_donvi = cursor.getString(cursor.getColumnIndexOrThrow("donvi"));
+                String g_mabp = cursor.getString(cursor.getColumnIndexOrThrow("tc_fce004"));
+                String g_ngay = cursor.getString(cursor.getColumnIndexOrThrow("tc_fce002"));
+                //String g_user = cursor.getString(cursor.getColumnIndexOrThrow("tc_fce003"));
+                String g_tc_fcd003 = cursor.getString(cursor.getColumnIndexOrThrow("tc_fcd003"));
+                String g_tenBP = g_tc_fcd003 + " " + g_donvi;
+
+                Intent hangmucIntent = new Intent(context, HangMucKiemTra.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("FACTORY", "");
+                bundle.putString("DEPNO", g_mabp);
+                bundle.putString("DEPNAME", g_tenBP);
+                bundle.putString("DATE", g_ngay);
+                //bundle.putString("USER", g_user);
+                hangmucIntent.putExtras(bundle);
+                context.startActivity(hangmucIntent);
+            }
+        });
+
+
     }
 
 

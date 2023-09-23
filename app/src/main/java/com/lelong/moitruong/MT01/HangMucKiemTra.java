@@ -39,7 +39,7 @@ public class HangMucKiemTra extends AppCompatActivity {
     private Create_Table Cre_db = null;
     DecimalFormat decimalFormat;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    String g_factory, g_maBP, g_tenBP, g_ngay;
+    String g_factory, g_maBP, g_tenBP, g_ngay,g_user;
     RecyclerView rcv_hangmuc;
     ListView lv_hangmuclon;
     List<String> hangMucLon_list;
@@ -54,7 +54,7 @@ public class HangMucKiemTra extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Call_updateData(g_hangMucPosition, g_ngay, g_maBP, Constant_Class.UserID);
+        Call_updateData(g_hangMucPosition, g_ngay, g_maBP, "");
     }
 
     @Override
@@ -70,7 +70,7 @@ public class HangMucKiemTra extends AppCompatActivity {
         g_maBP = getbundle.getString("DEPNO");
         g_tenBP = getbundle.getString("DEPNAME");
         g_ngay = getbundle.getString("DATE");
-
+        //g_user = getbundle.getString("USER");
         addcontrols();
         addEvent();
     }
@@ -101,7 +101,7 @@ public class HangMucKiemTra extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 g_hangMucPosition = position;
-                Call_updateData(position, g_ngay, g_maBP, Constant_Class.UserID);
+                Call_updateData(position, g_ngay, g_maBP, "");
             }
         });
         //Chọn hạng mục lớn và truy xuất dữ liệu hạng mục kiểm tra (E)
@@ -141,7 +141,7 @@ public class HangMucKiemTra extends AppCompatActivity {
 
     private void Call_updateData(Integer g_hangMucPosition, String g_ngay, String g_maBP, String userID) {
         hangmucChiTiet_list.clear();
-        Cursor curs_hmChiTiet = Cre_db.getHangMucChiTiet(g_hangMucPosition, g_ngay, g_maBP, Constant_Class.UserID);
+        Cursor curs_hmChiTiet = Cre_db.getHangMucChiTiet(g_hangMucPosition, g_ngay, g_maBP, "");
         curs_hmChiTiet.moveToFirst();
         for (int i = 0; i < curs_hmChiTiet.getCount(); i++) {
             String g_tc_fcc004 = curs_hmChiTiet.getString(curs_hmChiTiet.getColumnIndexOrThrow("tc_fcc004"));

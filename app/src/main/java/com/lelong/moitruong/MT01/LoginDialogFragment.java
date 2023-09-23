@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.lelong.moitruong.Constant_Class;
 import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
 
@@ -132,6 +133,7 @@ public class LoginDialogFragment extends DialogFragment {
                 bundle.putString("DEPNO", g_maBP);
                 bundle.putString("DEPNAME", g_tenBP);
                 bundle.putString("DATE", g_ngay);
+                bundle.putString("USER", Constant_Class.UserID);
                 hangmucIntent.putExtras(bundle);
                 startActivity(hangmucIntent);
             }
