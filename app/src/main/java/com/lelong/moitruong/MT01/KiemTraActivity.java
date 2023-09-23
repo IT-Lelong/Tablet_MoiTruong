@@ -113,16 +113,12 @@ public class KiemTraActivity extends AppCompatActivity {
             entries.add(new PieEntry(value, bophan));
             g_completed.moveToNext();
         }
-        //entries.add(new PieEntry(50.0f, "OK"));
-        //entries.add(new PieEntry(40.0f, "NG"));
-        //entries.add(new PieEntry(10.0f, "Nll"));
         // Tạo PieDataSet từ danh sách dữ liệu
         ArrayList<Integer> uniqueBrightContrastColors = new ArrayList<>();
         Random random = new Random();
         Set<Integer> colorSet = new HashSet<>(); // Dùng để kiểm tra tính duy nhất
 
         int numberOfColors = 16; // Số lượng màu bạn muốn sử dụng
-
         while (uniqueBrightContrastColors.size() < numberOfColors) {
             // Tạo màu sắc (hue) ngẫu nhiên
             float hue = random.nextFloat() * 360; // 0-360 độ
@@ -138,7 +134,7 @@ public class KiemTraActivity extends AppCompatActivity {
 
         PieDataSet dataSet = new PieDataSet(entries, "Tiến độ Kiểm tra 5S");
         dataSet.setColors(uniqueBrightContrastColors);
-        dataSet.setValueTextSize(20f); // Đặt cỡ chữ thành 16
+        dataSet.setValueTextSize(20f); // Đặt cỡ chữ thành 20
 
         // Tạo PieData từ PieDataSet
         PieData data = new PieData(dataSet);
@@ -159,6 +155,7 @@ public class KiemTraActivity extends AppCompatActivity {
 
     private void Call_showTranferDialog() {
         TransferDialog TransferDialog = new TransferDialog(this);
+        TransferDialog.setEnableBtn(true,true);
         TransferDialog.setOkButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

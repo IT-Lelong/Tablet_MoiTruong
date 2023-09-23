@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -31,10 +33,12 @@ public class TransferPhoto {
     MT01_Interface apiService;
     private final Context context;
     private final Cursor c_getTc_fcf;
+    private TransferDialog transferDialog;
 
-    public TransferPhoto(Context context, Cursor c_getTc_fcf) {
+    public TransferPhoto(Context context, Cursor c_getTc_fcf, TransferDialog transferDialog) {
         this.context = context;
         this.c_getTc_fcf = c_getTc_fcf;
+        this.transferDialog = transferDialog;
 
         Gson gson = new GsonBuilder().create();
 
@@ -57,11 +61,27 @@ public class TransferPhoto {
 
     private void Call_transPhoto() {
         c_getTc_fcf.moveToFirst();
+        transferDialog.setProgressBar(c_getTc_fcf.getCount());
+        // Sử dụng một danh sách các tệp tin cần tải lên
+        List<File> filesToUpload = new ArrayList<>();
+        for (int i = 0; i < c_getTc_fcf.getCount(); i++) {
+            String image_name = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf005"));
+            String image_date = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf002"));
+            String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + image_date.replace("-", "") + "/" + image_name;
+            File file = new File(image_path);
+            filesToUpload.add(file);
+            c_getTc_fcf.moveToNext();
+        }
+
+        // Bắt đầu quá trình tải lên bằng cách gọi hàm đệ quy
+        uploadFileRecursive(filesToUpload, 0);
+
+        /*
         //Open FOR
         for (int i = 0; i < c_getTc_fcf.getCount(); i++) {
             String image_name = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf005"));
             String image_date = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf002"));
-            String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + image_date.replace("-","") + "/" + image_name;
+            String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + image_date.replace("-", "") + "/" + image_name;
             File file = new File(image_path);  // Thay thế bằng đường dẫn thực tế của tệp ảnh
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
@@ -112,5 +132,72 @@ public class TransferPhoto {
             });
         }
         // Close FOR
+        */
+    }
+
+    // Hàm đệ quy để tải lên từng tệp tin một
+    void uploadFileRecursive(final List<File> files, final int currentIndex) {
+        if (currentIndex >= files.size()) {
+            transferDialog.setStatus("2");
+            transferDialog.setEnableBtn(false,true);
+            // Tất cả tệp tin đã được tải lên
+            return;
+        }
+
+        File fileToUpload = files.get(currentIndex);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileToUpload);
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", fileToUpload.getName(), requestFile);
+
+        Call<ResponseBody> callImage = apiService.uploadImage(imagePart, null);
+        callImage.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Xử lý kết quả ở đây
+                    InputStream inputStream = response.body().byteStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+
+                    while (true) {
+                        try {
+                            if (!((line = reader.readLine()) != null)) break;
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        sb.append(line);
+                    }
+
+                    String responseData = sb.toString(); // Dữ liệu JSON
+                    // Sử dụng Gson để phân tích dữ liệu JSON thành đối tượng
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = gson.fromJson(responseData, JsonObject.class);
+
+                    // Trích xuất các trường từ JSON
+                    String status = jsonObject.get("status").getAsString();
+                    String message = jsonObject.get("message").getAsString();
+
+                    if (status.equals("OK")) {
+                        transferDialog.updateProgressBar(currentIndex + 1);
+                        // Gọi đệ quy để tải lên tệp tin tiếp theo
+                        uploadFileRecursive(files, currentIndex + 1);
+                    } else {
+                        Toast.makeText(context, "Lỗi : " + message, Toast.LENGTH_LONG).show();
+                    }
+
+
+                } else {
+                    // Xử lý lỗi ở đây
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Xử lý khi có lỗi xảy ra trong quá trình gửi dữ liệu
+
+                // Gọi đệ quy để tải lên tệp tin tiếp theo
+                uploadFileRecursive(files, currentIndex + 1);
+            }
+        });
     }
 }

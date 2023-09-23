@@ -109,15 +109,14 @@ public class KiemTraActivity_Transfer {
 
                     if (status.equals("success")) {
                         //Hàm lấy ảnh và gửi ảnh
-                        transferPhoto = new TransferPhoto(context,c_getTc_fcf);
-
+                        transferPhoto = new TransferPhoto(context, c_getTc_fcf, transferDialog);
                     } else {
-                        Toast.makeText(context, "Lỗi : " + message, Toast.LENGTH_LONG).show();
+                        transferDialog.setStatus(message);
                     }
                 } else {
                     // Xử lý lỗi
                     String s = String.valueOf(response.body());
-                    Toast.makeText(context, "Lỗi : " + s, Toast.LENGTH_SHORT).show();
+                    transferDialog.setStatus(s);
                 }
             }
 
@@ -125,7 +124,7 @@ public class KiemTraActivity_Transfer {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Xử lý khi có lỗi xảy ra trong quá trình gửi dữ liệu
                 String s = String.valueOf(t.toString());
-                Toast.makeText(context, "Lỗi : " + s, Toast.LENGTH_SHORT).show();
+                transferDialog.setStatus(s);
             }
         });
 

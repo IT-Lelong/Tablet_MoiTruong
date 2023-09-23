@@ -13,7 +13,6 @@ import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
@@ -21,7 +20,6 @@ import com.lelong.moitruong.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +28,7 @@ public class TransferDialog {
     private Create_Table Cre_db = null;
     private Context context;
     private Dialog dialog;
-    private TextView tv_bdate, tv_edate, tv_processing;
+    private TextView tv_bdate, tv_edate, tv_processing, tv_processMaxValues, tv_updStatus;
     private Spinner sp_factory, sp_department;
     private ProgressBar progBar_transfer;
     private Button btnOk, btnCancel;
@@ -58,6 +56,8 @@ public class TransferDialog {
         tv_bdate = dialog.findViewById(R.id.tv_bdate);
         tv_edate = dialog.findViewById(R.id.tv_edate);
         tv_processing = dialog.findViewById(R.id.tv_processing);
+        tv_processMaxValues = dialog.findViewById(R.id.tv_processMaxValues);
+        tv_updStatus = dialog.findViewById(R.id.tv_updStatus);
         progBar_transfer = dialog.findViewById(R.id.progBar_transfer);
         sp_factory = dialog.findViewById(R.id.sp_factory);
         sp_department = dialog.findViewById(R.id.sp_department);
@@ -77,6 +77,8 @@ public class TransferDialog {
         department_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, department_List);
         sp_factory.setAdapter(factory_adapter);
         sp_department.setAdapter(department_adapter);
+
+        setStatus("0");
     }
 
     private void addEvents() {
@@ -148,7 +150,7 @@ public class TransferDialog {
                         try {
                             if (dateFormat.parse(selectedDate).after(dateFormat.parse(tv_edate.getText().toString()))) {
                                 tv_var.setText(tv_edate.getText().toString());
-                            }else{
+                            } else {
                                 tv_var.setText(selectedDate);
                             }
                         } catch (ParseException e) {
@@ -164,7 +166,7 @@ public class TransferDialog {
                         try {
                             if (dateFormat.parse(selectedDate).before(dateFormat.parse(tv_bdate.getText().toString()))) {
                                 tv_var.setText(tv_bdate.getText().toString());
-                            }else{
+                            } else {
                                 tv_var.setText(selectedDate);
                             }
                         } catch (ParseException e) {
@@ -177,11 +179,33 @@ public class TransferDialog {
         datePickerDialog.show();
     }
 
+    public void setStatus(String g_value) {
+        switch (g_value) {
+            case "0" :
+                tv_updStatus.setText("Xác nhận cập nhật");
+                break;
+            case "1" :
+                tv_updStatus.setText("Tiến hành cập nhật...");
+                break;
+            case "2":
+                tv_updStatus.setText("Cập nhật hoàn tất");
+                break;
+            default:
+                // Xử lý khi giá trị không khớp với bất kỳ trường hợp nào
+                tv_updStatus.setText(g_value);
+                break;
+        }
+    }
+
     public void setProgressBar(int g_value) {
+        setStatus("1");
+        tv_processMaxValues.setText(" / " + g_value);
         progBar_transfer.setMax(g_value);
     }
 
     public void updateProgressBar(int progress) {
+        setEnableBtn(false,false);
+        tv_processing.setText(String.valueOf(progress));
         progBar_transfer.setProgress(progress);
     }
 
@@ -216,5 +240,10 @@ public class TransferDialog {
 
     public void dismiss() {
         dialog.dismiss();
+    }
+
+    public void setEnableBtn(boolean bool_OK,boolean bool_Cancel) {
+        btnOk.setEnabled(bool_OK);
+        btnCancel.setEnabled(bool_Cancel);
     }
 }

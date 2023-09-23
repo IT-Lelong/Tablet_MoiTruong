@@ -20,10 +20,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:text="Xưởng"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/sp_factory"
@@ -39,10 +39,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:text="Bộ phận"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/sp_department"
@@ -58,10 +58,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:text="Ngày kiểm tra"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,28 +73,28 @@
                     android:id="@+id/tv_bdate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:hint="2023/09/01"
-                    android:textSize="18sp"
                     android:textColor="@color/black"
-                    android:gravity="center_vertical"/>
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
+                    android:gravity="center_vertical"
                     android:text="~"
-                    android:textSize="20sp"
-                    android:gravity="center_vertical"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tv_edate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:hint="2023/09/01"
-                    android:textSize="18sp"
                     android:textColor="@color/black"
-                    android:gravity="center_vertical"/>
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </TableRow>
@@ -107,16 +107,30 @@
         android:layout_marginBottom="5dp"
         android:background="@android:color/darker_gray" />
 
-
-    <TextView
-        android:id="@+id/tv_processing"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:gravity="right"
-        android:hint="0/100"
-        android:textSize="18sp" />
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_processing"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:hint="0"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_processMaxValues"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="left"
+            android:hint="/100"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progBar_transfer"
@@ -132,6 +146,16 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/tv_updStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Trạng thái"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -154,6 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:text="@string/btn_cancel" />
+
     </LinearLayout>
 
 </LinearLayout>
