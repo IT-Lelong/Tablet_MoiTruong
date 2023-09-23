@@ -461,7 +461,7 @@ public class Create_Table {
 
     }
     public Cursor getGroup(String date,String bophan, String hangmuc) {
-        String selectQuery = " SELECT DISTINCT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcd004,tc_fcd005 FROM tc_fcf_file,tc_fcd_file WHERE tc_fcd006 = tc_fcf003 ";
+        String selectQuery = " SELECT DISTINCT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcd004,tc_fcd005,tc_fcc006,tc_fcc007 FROM tc_fcf_file,tc_fcd_file,tc_fcc_file WHERE tc_fcc005 = tc_fcf001 AND tc_fcd006 = tc_fcf003 ";
         if (date.isEmpty() && bophan.isEmpty() && hangmuc.isEmpty()) {
             selectQuery += " AND tc_fcfpost = 'N' ";
         }
