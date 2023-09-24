@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -108,6 +110,7 @@ public class KiemTraActivity_Transfer {
                     String message = jsonObject.get("message").getAsString();
 
                     if (status.equals("success")) {
+                        //Cre_db.call_upd_tc_fcepost();
                         //Hàm lấy ảnh và gửi ảnh
                         transferPhoto = new TransferPhoto(context, c_getTc_fcf, transferDialog);
                     } else {

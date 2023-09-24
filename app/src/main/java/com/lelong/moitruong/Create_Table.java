@@ -243,6 +243,18 @@ public class Create_Table {
         }
     }
 
+    public void update_tc_fcfpost(String image_no, String image_date, String image_dept, String image_employ, String image_name) {
+        try {
+            db.execSQL(" UPDATE tc_fcf_file SET tc_fcfpost = 'Y' " +
+                    " WHERE tc_fcf001 ='" + image_no + "' " +
+                    " AND tc_fcf002 ='" + image_date + "'" +
+                    " AND tc_fcf003 = '" + image_dept + "'" +
+                    " AND tc_fcf004 = '" + image_employ + "' " +
+                    " AND tc_fcf005 = '" + image_name + "' ");
+        } catch (Exception e) {
+        }
+    }
+
     private void call_update_tc_fce(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
         String g_tc_fce008;
         Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
@@ -448,15 +460,16 @@ public class Create_Table {
 
         return db.rawQuery(selectQuery, null);
     }
+
     public void delete_Image(String name) {
         try {
-            db.execSQL("DELETE FROM tc_fcf_file WHERE tc_fcf005 = '"+ name +"' ");
+            db.execSQL("DELETE FROM tc_fcf_file WHERE tc_fcf005 = '" + name + "' ");
         } catch (Exception e) {
             String ex = e.getMessage().toString();
         }
-
     }
-    public Cursor getGroup(String date,String bophan, String hangmuc) {
+
+    public Cursor getGroup(String date, String bophan, String hangmuc) {
         String selectQuery = " SELECT DISTINCT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcd004,tc_fcd005,tc_fcc006,tc_fcc007 FROM tc_fcf_file,tc_fcd_file,tc_fcc_file WHERE tc_fcc005 = tc_fcf001 AND tc_fcd006 = tc_fcf003 ";
         if (date.isEmpty() && bophan.isEmpty() && hangmuc.isEmpty()) {
             selectQuery += " AND tc_fcfpost = 'N' ";
@@ -473,7 +486,8 @@ public class Create_Table {
         selectQuery += " ORDER BY tc_fcf002,tc_fcf003,tc_fcf001 ";
         return db.rawQuery(selectQuery, null);
     }
-    public Cursor getImage(String date,String bophan, String hangmuc) {
+
+    public Cursor getImage(String date, String bophan, String hangmuc) {
         String selectQuery = " SELECT tc_fcf005 FROM tc_fcf_file WHERE 1=1 ";
         if (date.isEmpty() && bophan.isEmpty() && hangmuc.isEmpty()) {
             selectQuery += " AND tc_fcfpost = 'N' ";
@@ -490,6 +504,7 @@ public class Create_Table {
         selectQuery += " ORDER BY tc_fcf005 ";
         return db.rawQuery(selectQuery, null);
     }
+
     public void update_imagecount(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
         String g_tc_fce008;
         Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
@@ -498,15 +513,16 @@ public class Create_Table {
                 " AND tc_fce003 ='" + g_user + "' " +
                 " AND tc_fce004 = '" + selectedDepartment + "' ", null);
         c.moveToFirst();
-            g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) - 1);
+        g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) - 1);
 
-            db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' " +
-                    " WHERE tc_fce001 ='" + selectedDetail + "' " +
-                    " AND tc_fce002 ='" + selectedDate + "'" +
-                    " AND tc_fce003 = '" + g_user + "'" +
-                    " AND tc_fce004 = '" + selectedDepartment + "' ");
+        db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' " +
+                " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                " AND tc_fce002 ='" + selectedDate + "'" +
+                " AND tc_fce003 = '" + g_user + "'" +
+                " AND tc_fce004 = '" + selectedDepartment + "' ");
         c.close();
     }
+
     public Cursor get_Thongtin_Anh(String name) {
         String selectQuery = " SELECT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcf004 FROM tc_fcf_file WHERE 1=1 ";
         if (!name.isEmpty()) {
@@ -515,20 +531,23 @@ public class Create_Table {
         selectQuery += " ORDER BY tc_fcf002,tc_fcf003,tc_fcf001 ";
         return db.rawQuery(selectQuery, null);
     }
+
     public Cursor get_hangmucchitiet(int g_positionlon, String g_positioncon) {
         String g_hangmuc = String.format("%02d", g_positionlon + 1);
         String selectQuery = " SELECT tc_fcc005,tc_fcc006,tc_fcc007 FROM tc_fcc_file WHERE tc_fcc003 = '" + g_hangmuc + "'   ";
-        if (!g_positioncon.isEmpty()){
+        if (!g_positioncon.isEmpty()) {
             String g_hangmuccon = String.format("%02d", Integer.parseInt(g_positioncon) + 1);
             selectQuery += " AND tc_fcc004 = '" + g_hangmuccon + "' ";
         }
         selectQuery += " ORDER BY  tc_fcc005 ";
         return db.rawQuery(selectQuery, null);
     }
+
     public void update_MoveImage(String nameold, String namenew, String chitiet, String bophan) {
-        db.execSQL("UPDATE tc_fcf_file SET tc_fcf001 = '"+ chitiet +"' , tc_fcf003 = '"+ bophan +"', " +
-                " tc_fcf005 = '"+ namenew +"' WHERE tc_fcf005='"+ nameold+ "' ");
+        db.execSQL("UPDATE tc_fcf_file SET tc_fcf001 = '" + chitiet + "' , tc_fcf003 = '" + bophan + "', " +
+                " tc_fcf005 = '" + namenew + "' WHERE tc_fcf005='" + nameold + "' ");
     }
+
     public void update_move(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
         String g_tc_fce008;
         Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
@@ -539,15 +558,13 @@ public class Create_Table {
         ;
         if (c.moveToFirst()) {
             g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) - 1);
-            if (Integer.parseInt(g_tc_fce008) == 0)
-            {
+            if (Integer.parseInt(g_tc_fce008) == 0) {
                 db.execSQL("DELETE FROM tc_fce_file " +
                         " WHERE tc_fce001 ='" + selectedDetail + "' " +
                         " AND tc_fce002 ='" + selectedDate + "'" +
                         " AND tc_fce003 = '" + g_user + "'" +
                         " AND tc_fce004 = '" + selectedDepartment + "' ");
-            }
-            else{
+            } else {
                 db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' " +
                         " WHERE tc_fce001 ='" + selectedDetail + "' " +
                         " AND tc_fce002 ='" + selectedDate + "'" +
@@ -557,6 +574,7 @@ public class Create_Table {
         }
         c.close();
     }
+
     public void update_movenewImage(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
         String g_tc_fce008;
         Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
@@ -580,13 +598,14 @@ public class Create_Table {
         }
         c.close();
     }
+
     public Cursor get_ImageInfo(String name) {
         String selectQuery = " SELECT tc_fcb004,tc_fcb005,tc_fcc005,tc_fcc006,tc_fcc007,tc_fcd003," +
                 " tc_fcd004,tc_fcd005,tc_fcf002,tc_fcf005,tc_fcq001,cpf02,ta_cpf001  FROM tc_fcc_file,tc_fcf_file," +
                 " tc_fcb_file,tc_fcd_file,tc_fcq_file  WHERE tc_fcc005=tc_fcf001 AND tc_fcb001=tc_fcc001" +
                 " AND tc_fcd006 = tc_fcf003 AND tc_fcb002=tc_fcc002 AND tc_fcb003= tc_fcc003 AND tc_fcq001 = tc_fcf004 ";
-        if (!name.isEmpty()){
-            selectQuery += " AND tc_fcf005='"+ name +"' ";
+        if (!name.isEmpty()) {
+            selectQuery += " AND tc_fcf005='" + name + "' ";
         }
         selectQuery += " ORDER BY  tc_fcc005 ";
         return db.rawQuery(selectQuery, null);
@@ -595,8 +614,8 @@ public class Create_Table {
     public Cursor getChartCompleteData() {
         //select max(tc_fcd002) max_tc_fcd002  from tc_fcd_filemColumns = {String[1]@33400} ["g_count"]
         String selectQuery = " select tc_fce004, tc_fcd004,tc_fcd005, round((CAST(sum(tc_fce008) as REAL) / (select sum(tc_fce008) total from tc_fce_file where tc_fce002 = (select max(tc_fce002) from tc_fce_file)) ) * 100   ,2)  g_count " +
-                             " from tc_fce_file ,tc_fcd_file " +
-                             " where tc_fcd006= tc_fce004 and tc_fce002 = (select max(tc_fce002) from tc_fce_file)  group by tc_fce004  ";
+                " from tc_fce_file ,tc_fcd_file " +
+                " where tc_fcd006= tc_fce004 and tc_fce002 = (select max(tc_fce002) from tc_fce_file)  group by tc_fce004  ";
 
         return db.rawQuery(selectQuery, null);
     }

@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.lelong.moitruong.Constant_Class;
+import com.lelong.moitruong.Create_Table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,6 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TransferPhoto {
     MT01_Interface apiService;
+    Create_Table Cre_db;
     private final Context context;
     private final Cursor c_getTc_fcf;
     private TransferDialog transferDialog;
@@ -39,6 +41,9 @@ public class TransferPhoto {
         this.context = context;
         this.c_getTc_fcf = c_getTc_fcf;
         this.transferDialog = transferDialog;
+
+        Cre_db = new Create_Table(context);
+        Cre_db.open();
 
         Gson gson = new GsonBuilder().create();
 
@@ -63,13 +68,23 @@ public class TransferPhoto {
         c_getTc_fcf.moveToFirst();
         transferDialog.setProgressBar(c_getTc_fcf.getCount());
         // Sử dụng một danh sách các tệp tin cần tải lên
-        List<File> filesToUpload = new ArrayList<>();
+        List<FileInfo> filesToUpload = new ArrayList<>();
         for (int i = 0; i < c_getTc_fcf.getCount(); i++) {
-            String image_name = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf005"));
+            String image_no = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf001"));
             String image_date = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf002"));
+            String image_dept = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf003"));
+            String image_employ = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf004"));
+            String image_name = c_getTc_fcf.getString(c_getTc_fcf.getColumnIndexOrThrow("tc_fcf005"));
+
             String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + image_date.replace("-", "") + "/" + image_name;
             File file = new File(image_path);
-            filesToUpload.add(file);
+            //filesToUpload.add(file);
+
+            // Tạo một đối tượng FileInfo từ thông tin tên tệp và ngày
+            FileInfo fileInfo = new FileInfo(image_no,image_date,image_dept,image_employ,image_name,file);
+
+            // Thêm FileInfo vào danh sách
+            filesToUpload.add(fileInfo);
             c_getTc_fcf.moveToNext();
         }
 
@@ -135,8 +150,52 @@ public class TransferPhoto {
         */
     }
 
+    public class FileInfo {
+
+        private final String image_no;
+        private final String image_date;
+        private final String image_dept;
+        private final String image_employ;
+        private final String image_name;
+        private final File file;
+
+        public String getImage_no() {
+            return image_no;
+        }
+
+        public String getImage_date() {
+            return image_date;
+        }
+
+        public String getImage_dept() {
+            return image_dept;
+        }
+
+        public String getImage_employ() {
+            return image_employ;
+        }
+
+        public String getImage_name() {
+            return image_name;
+        }
+
+        public File getFilePath() {
+            return file;
+        }
+
+        public FileInfo(String image_no, String image_date, String image_dept, String image_employ, String image_name, File file) {
+            this.image_no = image_no;
+            this.image_date = image_date;
+            this.image_dept = image_dept;
+            this.image_employ = image_employ;
+            this.image_name = image_name;
+            this.file = file;
+        }
+
+    }
+
     // Hàm đệ quy để tải lên từng tệp tin một
-    void uploadFileRecursive(final List<File> files, final int currentIndex) {
+    void uploadFileRecursive(final List<FileInfo> files, final int currentIndex) {
         if (currentIndex >= files.size()) {
             transferDialog.setStatus("2");
             transferDialog.setEnableBtn(false,true);
@@ -144,9 +203,9 @@ public class TransferPhoto {
             return;
         }
 
-        File fileToUpload = files.get(currentIndex);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileToUpload);
-        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", fileToUpload.getName(), requestFile);
+        FileInfo fileToUpload = files.get(currentIndex);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), fileToUpload.getFilePath());
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", fileToUpload.getImage_name(), requestFile);
 
         Call<ResponseBody> callImage = apiService.uploadImage(imagePart, null);
         callImage.enqueue(new Callback<ResponseBody>() {
@@ -178,6 +237,7 @@ public class TransferPhoto {
                     String message = jsonObject.get("message").getAsString();
 
                     if (status.equals("OK")) {
+                        Cre_db.update_tc_fcfpost(fileToUpload.image_no,fileToUpload.image_date,fileToUpload.image_dept,fileToUpload.image_employ,fileToUpload.image_name);
                         transferDialog.updateProgressBar(currentIndex + 1);
                         // Gọi đệ quy để tải lên tệp tin tiếp theo
                         uploadFileRecursive(files, currentIndex + 1);
