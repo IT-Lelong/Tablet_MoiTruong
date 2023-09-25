@@ -47,11 +47,6 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/img_galery"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_weight="0.5"
-        app:srcCompat="@drawable/gallery" />
+
 
 </LinearLayout>

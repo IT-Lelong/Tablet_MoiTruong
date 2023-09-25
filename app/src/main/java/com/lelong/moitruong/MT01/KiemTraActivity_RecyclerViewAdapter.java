@@ -83,7 +83,7 @@ public class KiemTraActivity_RecyclerViewAdapter extends RecyclerView.Adapter<Ki
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_stt,tv_donvi,tv_ngay,tv_loi;
-        public ImageView img_galery;
+        //public ImageView img_galery;
 
         public ViewHolder(View itemView) {
             super(itemView);
