@@ -111,6 +111,7 @@ public class Search_Dialog extends DialogFragment {
             kiemtra_List.add(data);
             curs_hangmuclon.moveToNext();
         }
+        kiemtra_List.add("");
         //itemList.add("");
         //factory_List.add("Đức Hòa");
         //factory_List.add("Bến Lức");
@@ -119,6 +120,7 @@ public class Search_Dialog extends DialogFragment {
         ArrayAdapter<String> kiemtra_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, kiemtra_List);
         ArrayAdapter<String> bophan_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, bophan_List);
         hm_kiemtra.setAdapter(kiemtra_adapter);
+        hm_kiemtra.setSelection(kiemtra_List.size() - 1);
         sp_bophan.setAdapter(bophan_adapter);
         String xuong= null;
         cur_getbophan = null;
@@ -168,17 +170,22 @@ public class Search_Dialog extends DialogFragment {
         hm_kiemtra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String g_index="";
                 String name_hm_kiemtra = kiemtra_List.get(position);
                 int index = kiemtra_List.indexOf(kiemtra_List.get(position));
-                Cursor curs_hangmuccon = Cre_db.get_hangmucchitiet(index,"");
+                g_index = String.valueOf(index);
+                Cursor curs_hangmuccon = Cre_db.get_hangmucchitiet(g_index,"");
                 curs_hangmuccon.moveToFirst();
                 for (int i = 0; i < curs_hangmuccon.getCount(); i++) {
+                    con_List.remove(0);
                     String data = curs_hangmuccon.getString(curs_hangmuccon.getColumnIndexOrThrow("tc_fcc007"));
                     con_List.add(data);
                     curs_hangmuccon.moveToNext();
                 }
+                con_List.add("");
                 ArrayAdapter<String> con_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, con_List);
                 hm_con.setAdapter(con_adapter);
+                hm_con.setSelection(con_List.size() - 1);
             }
 
             @Override
@@ -203,13 +210,41 @@ public class Search_Dialog extends DialogFragment {
                     date = edt_date.getText().toString();
                     int g_bpPosition = sp_bophan.getSelectedItemPosition();
                     int g_hmkiemtraPosition = hm_kiemtra.getSelectedItemPosition();
-                    String g_hmconPosition = String.valueOf(hm_con.getSelectedItemPosition());
-                    Cursor curs_data = Cre_db.get_hangmucchitiet(g_hmkiemtraPosition,g_hmconPosition);
-                    curs_data.moveToFirst();
-                    for (int i = 0; i < curs_data.getCount(); i++) {
-                        g_tc_fcc05 = curs_data.getString(curs_data.getColumnIndexOrThrow("tc_fcc005"));
-                        curs_data.moveToNext();
+                    int g_conPosition = hm_con.getSelectedItemPosition();
+                    String g_position="";
+                    String g_hmconPosition="";
+                    if (g_hmkiemtraPosition == 8){
+                        g_position="";
+                        g_hmconPosition= "";
+                        g_tc_fcc05 ="";
+                    }else{
+                        g_position = String.valueOf(g_hmkiemtraPosition);
+                        if(hm_con.getSelectedItem().toString().equals("")){
+                            g_hmconPosition="";
+                            g_tc_fcc05 ="";
+                        }
+                        else{
+                            g_hmconPosition = String.valueOf(hm_con.getSelectedItemPosition());
+                            Cursor curs_data = Cre_db.get_hangmucchitiet(g_position,g_hmconPosition);
+                            curs_data.moveToFirst();
+                            for (int i = 0; i < curs_data.getCount(); i++) {
+                                g_tc_fcc05 = curs_data.getString(curs_data.getColumnIndexOrThrow("tc_fcc005"));
+                                curs_data.moveToNext();
+                            }
+                        }
                     }
+                    /*if(g_hmconPosition.equals(""))
+                    {
+                        g_tc_fcc05 ="";
+                    }
+                    else{
+                        Cursor curs_data = Cre_db.get_hangmucchitiet(g_position,g_hmconPosition);
+                        curs_data.moveToFirst();
+                        for (int i = 0; i < curs_data.getCount(); i++) {
+                            g_tc_fcc05 = curs_data.getString(curs_data.getColumnIndexOrThrow("tc_fcc005"));
+                            curs_data.moveToNext();
+                        }
+                    }*/
                     cur_getbophan.moveToPosition(g_bpPosition);
                     g_tc_fcd006 = String.valueOf(cur_getbophan.getString(cur_getbophan.getColumnIndexOrThrow("tc_fcd006")));
                 }

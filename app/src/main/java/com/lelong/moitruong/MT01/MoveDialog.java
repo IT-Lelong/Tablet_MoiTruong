@@ -137,7 +137,7 @@ public class MoveDialog extends DialogFragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String name_hm_kiemtra = kiemtra_List.get(position);
                 int index = kiemtra_List.indexOf(kiemtra_List.get(position));
-                Cursor curs_hangmuccon = Cre_db.get_hangmucchitiet(index,"");
+                Cursor curs_hangmuccon = Cre_db.get_hangmucchitiet(String.valueOf(index),"");
                 curs_hangmuccon.moveToFirst();
                 for (int i = 0; i < curs_hangmuccon.getCount(); i++) {
                     String data = curs_hangmuccon.getString(curs_hangmuccon.getColumnIndexOrThrow("tc_fcc007"));
@@ -160,7 +160,7 @@ public class MoveDialog extends DialogFragment {
                 int g_bpPosition = sp_bophan.getSelectedItemPosition();
                 int g_hmkiemtraPosition = hm_kiemtra.getSelectedItemPosition();
                 String g_hmconPosition = String.valueOf(hm_con.getSelectedItemPosition());
-                Cursor curs_data = Cre_db.get_hangmucchitiet(g_hmkiemtraPosition,g_hmconPosition);
+                Cursor curs_data = Cre_db.get_hangmucchitiet(String.valueOf(g_hmkiemtraPosition),g_hmconPosition);
                 curs_data.moveToFirst();
                 for (int i = 0; i < curs_data.getCount(); i++) {
                     g_tc_fcc05 = curs_data.getString(curs_data.getColumnIndexOrThrow("tc_fcc005"));
