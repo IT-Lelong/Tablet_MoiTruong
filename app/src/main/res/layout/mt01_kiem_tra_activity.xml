@@ -33,7 +33,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:text="STT"
+                    android:text="@string/tt_stt"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Don vi"
+                    android:text="@string/tt_bophan"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Ngay"
+                    android:text="@string/tt_ngay"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -59,8 +59,8 @@
                     style="@style/title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="Lỗi"
+                    android:layout_weight="1"
+                    android:text="@string/tt_hangmuc"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
