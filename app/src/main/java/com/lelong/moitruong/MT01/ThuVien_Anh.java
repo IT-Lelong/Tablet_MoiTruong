@@ -48,6 +48,7 @@ public class ThuVien_Anh extends AppCompatActivity {
         selectedDate = intent.getStringExtra("ngay");
         selectedDepartment = intent.getStringExtra("bophan");
         selectedDetail = intent.getStringExtra("hangmuc");
+
         recyclerView = findViewById(R.id.recyclerView);
         //recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

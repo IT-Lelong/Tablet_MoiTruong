@@ -471,6 +471,9 @@ public class Create_Table {
 
     public Cursor getGroup(String date, String bophan, String hangmuc) {
         String selectQuery = " SELECT DISTINCT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcd004,tc_fcd005,tc_fcc006,tc_fcc007 FROM tc_fcf_file,tc_fcd_file,tc_fcc_file WHERE tc_fcc005 = tc_fcf001 AND tc_fcd006 = tc_fcf003 ";
+        if (date.isEmpty() && bophan.isEmpty() && hangmuc.isEmpty()) {
+            //selectQuery += " AND tc_fcfpost = 'N' ";
+        }
         if (!bophan.isEmpty()) {
             selectQuery += " AND tc_fcf001 = '" + bophan + "' ";
         }
@@ -486,6 +489,9 @@ public class Create_Table {
 
     public Cursor getImage(String date, String bophan, String hangmuc) {
         String selectQuery = " SELECT tc_fcf005 FROM tc_fcf_file WHERE 1=1 ";
+        if (date.isEmpty() && bophan.isEmpty() && hangmuc.isEmpty()) {
+            //selectQuery += " AND tc_fcfpost = 'N' ";
+        }
         if (!bophan.isEmpty()) {
             selectQuery += " AND tc_fcf001 = '" + bophan + "' ";
         }
@@ -527,11 +533,8 @@ public class Create_Table {
     }
 
     public Cursor get_hangmucchitiet(String g_positionlon, String g_positioncon) {
-        String selectQuery = " SELECT tc_fcc005,tc_fcc006,tc_fcc007 FROM tc_fcc_file WHERE 1=1   ";
-        if (!g_positionlon.isEmpty()) {
-            String g_hangmuc = String.format("%02d", Integer.parseInt(g_positionlon) + 1);
-            selectQuery += " AND tc_fcc003 = '" + g_hangmuc + "' ";
-        }
+        String g_hangmuc = String.format("%02d", g_positionlon + 1);
+        String selectQuery = " SELECT tc_fcc005,tc_fcc006,tc_fcc007 FROM tc_fcc_file WHERE tc_fcc003 = '" + g_hangmuc + "'   ";
         if (!g_positioncon.isEmpty()) {
             String g_hangmuccon = String.format("%02d", Integer.parseInt(g_positioncon) + 1);
             selectQuery += " AND tc_fcc004 = '" + g_hangmuccon + "' ";
@@ -615,5 +618,24 @@ public class Create_Table {
                 " where tc_fcd006= tc_fce004 and tc_fce002 = (select max(tc_fce002) from tc_fce_file)  group by tc_fce004  ";
 
         return db.rawQuery(selectQuery, null);
+    }
+
+    public void call_upd_tc_fcepost(Cursor c_getTc_fce) {
+        if (c_getTc_fce.getCount() > 0) {
+            c_getTc_fce.moveToFirst();
+            for (int i = 0; i < c_getTc_fce.getCount(); i++) {
+                String g_tc_fce001 = c_getTc_fce.getString(c_getTc_fce.getColumnIndexOrThrow("tc_fce001"));
+                String g_tc_fce002 = c_getTc_fce.getString(c_getTc_fce.getColumnIndexOrThrow("tc_fce002"));
+                String g_tc_fce003 = c_getTc_fce.getString(c_getTc_fce.getColumnIndexOrThrow("tc_fce003"));
+                String g_tc_fce004 = c_getTc_fce.getString(c_getTc_fce.getColumnIndexOrThrow("tc_fce004"));
+
+                db.execSQL(" UPDATE tc_fce_file SET tc_fcepost = 'Y' " +
+                        " WHERE tc_fce001 ='" + g_tc_fce001 + "' " +
+                        " AND tc_fce002 ='" + g_tc_fce002 + "'" +
+                        " AND tc_fce003 = '" + g_tc_fce003 + "'" +
+                        " AND tc_fce004 = '" + g_tc_fce004 + "' ");
+                c_getTc_fce.moveToNext();
+            }
+        }
     }
 }

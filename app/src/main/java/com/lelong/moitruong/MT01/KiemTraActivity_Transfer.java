@@ -73,64 +73,68 @@ public class KiemTraActivity_Transfer {
         //Khi sử dụng Retrofit cần sử dụng thư viện Json của Google , không nên dùng thư viện Json của Java
         Cursor c_getTc_fce = Cre_db.getTc_fce_Upload(input_bdate, input_edate, input_department); //Hạng mục vi phạm
         Cursor c_getTc_fcf = Cre_db.getTc_fcf_Upload(input_bdate, input_edate, input_department); //Ảnh hạng mục vi phạm
+        if (c_getTc_fce.getCount() > 0) {
 
-        JsonArray jarray_tc_fce = CursorToJsonConverter.cursorToJson(c_getTc_fce);
-        JsonArray jarray_tc_fcf = CursorToJsonConverter.cursorToJson(c_getTc_fcf);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("jarr_tc_fce", jarray_tc_fce);
-        jsonObject.add("jarr_tc_fcf", jarray_tc_fcf);
+            JsonArray jarray_tc_fce = CursorToJsonConverter.cursorToJson(c_getTc_fce);
+            JsonArray jarray_tc_fcf = CursorToJsonConverter.cursorToJson(c_getTc_fcf);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.add("jarr_tc_fce", jarray_tc_fce);
+            jsonObject.add("jarr_tc_fcf", jarray_tc_fcf);
 
-        Call<ResponseBody> call = apiService.sendDataToServer(jsonObject);
+            Call<ResponseBody> call = apiService.sendDataToServer(jsonObject);
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    InputStream inputStream = response.body().byteStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        InputStream inputStream = response.body().byteStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                        StringBuilder sb = new StringBuilder();
+                        String line;
 
-                    while (true) {
-                        try {
-                            if (!((line = reader.readLine()) != null)) break;
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                        while (true) {
+                            try {
+                                if (!((line = reader.readLine()) != null)) break;
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            sb.append(line);
                         }
-                        sb.append(line);
-                    }
 
-                    String responseData = sb.toString(); // Dữ liệu JSON
-                    // Sử dụng Gson để phân tích dữ liệu JSON thành đối tượng
-                    Gson gson = new Gson();
-                    JsonObject jsonObject = gson.fromJson(responseData, JsonObject.class);
+                        String responseData = sb.toString(); // Dữ liệu JSON
+                        // Sử dụng Gson để phân tích dữ liệu JSON thành đối tượng
+                        Gson gson = new Gson();
+                        JsonObject jsonObject = gson.fromJson(responseData, JsonObject.class);
 
-                    // Trích xuất các trường từ JSON
-                    String status = jsonObject.get("status").getAsString();
-                    String message = jsonObject.get("message").getAsString();
+                        // Trích xuất các trường từ JSON
+                        String status = jsonObject.get("status").getAsString();
+                        String message = jsonObject.get("message").getAsString();
 
-                    if (status.equals("success")) {
-                        //Cre_db.call_upd_tc_fcepost();
-                        //Hàm lấy ảnh và gửi ảnh
-                        transferPhoto = new TransferPhoto(context, c_getTc_fcf, transferDialog);
+                        if (status.equals("success")) {
+                            Cre_db.call_upd_tc_fcepost(c_getTc_fce);
+                            //Hàm lấy ảnh và gửi ảnh
+                            transferPhoto = new TransferPhoto(context, c_getTc_fcf, transferDialog);
+                        } else {
+                            transferDialog.setStatus(message);
+                        }
                     } else {
-                        transferDialog.setStatus(message);
+                        // Xử lý lỗi
+                        String s = String.valueOf(response.body());
+                        transferDialog.setStatus(s);
                     }
-                } else {
-                    // Xử lý lỗi
-                    String s = String.valueOf(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Xử lý khi có lỗi xảy ra trong quá trình gửi dữ liệu
+                    String s = String.valueOf(t.toString());
                     transferDialog.setStatus(s);
                 }
-            }
+            });
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Xử lý khi có lỗi xảy ra trong quá trình gửi dữ liệu
-                String s = String.valueOf(t.toString());
-                transferDialog.setStatus(s);
-            }
-        });
-
+        } else {
+            transferDialog.setStatus("Không có dữ liệu cập nhật");
+        }
     }
 
 }

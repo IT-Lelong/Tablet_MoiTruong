@@ -36,9 +36,13 @@ public class KiemTraActivity extends AppCompatActivity {
     Button btn_kiemtra, btn_KetChuyen, btn_TraCuu;
     private KiemTraActivity_RecyclerViewAdapter kiemTraActivity_recyclerViewAdapter;
     private PieChart pieChart;
-    public interface OnItemClickListener {
-        void onItemClick(int position);
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        call_reloaFormData();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,10 +90,12 @@ public class KiemTraActivity extends AppCompatActivity {
         btn_KetChuyen = findViewById(R.id.btn_KetChuyen);
         btn_TraCuu = findViewById(R.id.btn_TraCuu);
         pieChart = findViewById(R.id.pieChart);
-
-        call_completeChart();
-
         rcv_kiemtra.setLayoutManager(new LinearLayoutManager(this));
+        call_reloaFormData();
+    }
+
+    private void call_reloaFormData() {
+        call_completeChart();
         Cursor cursor = Cre_db.departmentCheckedData();
         kiemTraActivity_recyclerViewAdapter = new KiemTraActivity_RecyclerViewAdapter(this,cursor);
         rcv_kiemtra.setAdapter(kiemTraActivity_recyclerViewAdapter);
@@ -132,7 +138,7 @@ public class KiemTraActivity extends AppCompatActivity {
             }
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Tiến độ Kiểm tra 5S");
+        PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(uniqueBrightContrastColors);
         dataSet.setValueTextSize(20f); // Đặt cỡ chữ thành 20
 
@@ -165,7 +171,6 @@ public class KiemTraActivity extends AppCompatActivity {
                 String input_department = TransferDialog.getSelected_sp_department();
 
                 new KiemTraActivity_Transfer(getApplicationContext(),TransferDialog,input_bdate,input_edate,input_factory,input_department);
-                //TransferDialog.dismiss();
             }
         });
         TransferDialog.setCancelButtonClickListener(new View.OnClickListener() {
