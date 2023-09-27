@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -89,6 +90,20 @@ public class OpenCamera extends AppCompatActivity {
     }
 
     private void takePhoto() {
+        if (captureButton.isEnabled()) {
+            // Vô hiệu hóa Button
+            captureButton.setEnabled(false);
+
+            // Đặt trạng thái của Button sau 3 giây
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Kích hoạt lại Button sau 3 giây
+                    captureButton.setEnabled(true);
+                }
+            }, 3000); // 3000 milliseconds = 3 giây
+        }
         String timestamp = new SimpleDateFormat("HHmmss", Locale.getDefault()).format(new Date());
         String fileName = selectedDepartment + "_" + selectedDetail + "_" + g_User + "_" + selectedDate + "_" + timestamp + ".png";
 

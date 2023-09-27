@@ -54,7 +54,6 @@ public class Search_Dialog extends DialogFragment {
     Cursor cur_getbophan;
     private String myVariable;
     String result;
-    CheckBox checkbox ;
     DatePickerDialog datePickerDialog;
     // Constructor không đối số bắt buộc
     //public Search_Dialog() {
@@ -99,7 +98,6 @@ public class Search_Dialog extends DialogFragment {
         sp_bophan = view.findViewById(R.id.sp_bophan);
         btnOk = view.findViewById(R.id.btnOk);
         btnCancel = view.findViewById(R.id.btnCancel);
-        checkbox = view.findViewById(R.id.checkbox_id);
 
         List<String> kiemtra_List = new ArrayList<>();
         List<String> con_List = new ArrayList<>();
@@ -134,7 +132,9 @@ public class Search_Dialog extends DialogFragment {
                 bophan_List.add(materialInfo);
                 cur_getbophan.moveToNext();
             }
+            bophan_List.add("");
             bophan_adapter.notifyDataSetChanged();
+            sp_bophan.setSelection(bophan_List.size() - 1);
         }
         edt_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +178,6 @@ public class Search_Dialog extends DialogFragment {
                 curs_hangmuccon.moveToFirst();
                 con_List.clear();
                 for (int i = 0; i < curs_hangmuccon.getCount(); i++) {
-                    //con_List.remove(0);
                     String data = curs_hangmuccon.getString(curs_hangmuccon.getColumnIndexOrThrow("tc_fcc007"));
                     con_List.add(data);
                     curs_hangmuccon.moveToNext();
@@ -200,13 +199,13 @@ public class Search_Dialog extends DialogFragment {
                 String date=null;
                 String g_tc_fcc05=null;
                 String g_tc_fcd006=null;
-                boolean isChecked = checkbox.isChecked();
+                /*boolean isChecked = checkbox.isChecked();
                 if (isChecked) {
                     // Checkbox đã được kiểm tra, thực hiện hành động tương ứng
                     date = "";
                     g_tc_fcd006="";
                     g_tc_fcc05="";
-                } else {
+                } else {*/
                     // Checkbox chưa được kiểm tra, thực hiện hành động khác (nếu cần)
                     date = edt_date.getText().toString();
                     int g_bpPosition = sp_bophan.getSelectedItemPosition();
@@ -246,9 +245,15 @@ public class Search_Dialog extends DialogFragment {
                             curs_data.moveToNext();
                         }
                     }*/
-                    cur_getbophan.moveToPosition(g_bpPosition);
-                    g_tc_fcd006 = String.valueOf(cur_getbophan.getString(cur_getbophan.getColumnIndexOrThrow("tc_fcd006")));
-                }
+                    if(sp_bophan.getSelectedItem().toString().equals("")){
+                        g_tc_fcd006 ="";
+                    }
+                    else{
+                        cur_getbophan.moveToPosition(g_bpPosition);
+                        g_tc_fcd006 = String.valueOf(cur_getbophan.getString(cur_getbophan.getColumnIndexOrThrow("tc_fcd006")));
+                    }
+
+                //}
                 dismiss();
                 Intent intent = new Intent(getContext(), ThuVien_Anh.class);
                 intent.putExtra("ngay", date);
