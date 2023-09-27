@@ -176,8 +176,9 @@ public class Search_Dialog extends DialogFragment {
                 g_index = String.valueOf(index);
                 Cursor curs_hangmuccon = Cre_db.get_hangmucchitiet(g_index,"");
                 curs_hangmuccon.moveToFirst();
+                con_List.clear();
                 for (int i = 0; i < curs_hangmuccon.getCount(); i++) {
-                    con_List.remove(0);
+                    //con_List.remove(0);
                     String data = curs_hangmuccon.getString(curs_hangmuccon.getColumnIndexOrThrow("tc_fcc007"));
                     con_List.add(data);
                     curs_hangmuccon.moveToNext();

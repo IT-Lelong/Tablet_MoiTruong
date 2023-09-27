@@ -533,8 +533,11 @@ public class Create_Table {
     }
 
     public Cursor get_hangmucchitiet(String g_positionlon, String g_positioncon) {
-        String g_hangmuc = String.format("%02d", g_positionlon + 1);
-        String selectQuery = " SELECT tc_fcc005,tc_fcc006,tc_fcc007 FROM tc_fcc_file WHERE tc_fcc003 = '" + g_hangmuc + "'   ";
+        String selectQuery = " SELECT tc_fcc005,tc_fcc006,tc_fcc007 FROM tc_fcc_file WHERE 1=1  ";
+        if (!g_positionlon.isEmpty()) {
+            String g_hangmuc = String.format("%02d", Integer.parseInt(g_positionlon) + 1);
+            selectQuery += " AND tc_fcc003 = '" + g_hangmuc + "' ";
+        }
         if (!g_positioncon.isEmpty()) {
             String g_hangmuccon = String.format("%02d", Integer.parseInt(g_positioncon) + 1);
             selectQuery += " AND tc_fcc004 = '" + g_hangmuccon + "' ";
@@ -637,5 +640,13 @@ public class Create_Table {
                 c_getTc_fce.moveToNext();
             }
         }
+    }
+    public Cursor getDepartment_today(String date) {
+        String selectQuery = " select distinct tc_fce004,tc_fcd003,tc_fcd004,tc_fcd005 from tc_fce_file,tc_fcd_file  where tc_fcd006 = tc_fce004 ";
+        if (!date.isEmpty()) {
+            selectQuery += " and  tc_fce002= '" + date + "'";
+        }
+        selectQuery += " ORDER BY tc_fce004 ";
+        return db.rawQuery(selectQuery, null);
     }
 }

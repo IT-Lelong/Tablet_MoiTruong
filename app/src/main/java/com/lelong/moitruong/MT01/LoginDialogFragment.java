@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -12,8 +13,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -74,9 +78,9 @@ public class LoginDialogFragment extends DialogFragment {
         factory_List.add("Đức Hòa");
         factory_List.add("Bến Lức");
         ArrayAdapter<String> factory_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, factory_List);
-        ArrayAdapter<String> department_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, department_List);
+        //ArrayAdapter<String> department_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, department_List);
         sp_factory.setAdapter(factory_adapter);
-        sp_department.setAdapter(department_adapter);
+
 
         sp_factory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -102,8 +106,14 @@ public class LoginDialogFragment extends DialogFragment {
                         department_List.add(materialInfo);
                         cur_getdata.moveToNext();
                     }
-                    department_adapter.notifyDataSetChanged();
                 }
+                else
+                {
+                    department_List.clear();
+                }
+                Cursor getDepartment_today = Cre_db.getDepartment_today(String.valueOf(dateFormat.format(new Date())));
+                final Spinner_Adapter department_adapter = new Spinner_Adapter(getContext(),getDepartment_today, department_List);
+                sp_department.setAdapter(department_adapter);
             }
 
             @Override
@@ -116,26 +126,32 @@ public class LoginDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 int g_spDepPosition = sp_department.getSelectedItemPosition();
-                cur_getdata.moveToPosition(g_spDepPosition);
-                String g_tc_fcd003 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd003")));
-                String g_tc_fcd004 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd004")));
-                String g_tc_fcd005 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd005")));
-                String g_maBP = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd006")));
-                String g_spFactory = String.valueOf(sp_factory.getSelectedItem());
-                String g_tenBP = g_tc_fcd003 + " " + g_tc_fcd004 + " " + g_tc_fcd005;
-                String g_ngay = tv_ngaykiemtra.getText().toString();
-                dismiss();
+                String g_maBP=null,g_spFactory=null,g_tenBP=null,g_ngay=null;
+                if (g_spDepPosition >= 0){
+                    cur_getdata.moveToPosition(g_spDepPosition);
+                    String g_tc_fcd003 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd003")));
+                    String g_tc_fcd004 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd004")));
+                    String g_tc_fcd005 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd005")));
+                    g_maBP = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd006")));
+                    g_spFactory = String.valueOf(sp_factory.getSelectedItem());
+                    g_tenBP = g_tc_fcd003 + " " + g_tc_fcd004 + " " + g_tc_fcd005;
+                    g_ngay = tv_ngaykiemtra.getText().toString();
 
-                Intent hangmucIntent = new Intent();
-                hangmucIntent.setClass(getContext(), HangMucKiemTra.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("FACTORY", g_spFactory);
-                bundle.putString("DEPNO", g_maBP);
-                bundle.putString("DEPNAME", g_tenBP);
-                bundle.putString("DATE", g_ngay);
-                bundle.putString("USER", Constant_Class.UserID);
-                hangmucIntent.putExtras(bundle);
-                startActivity(hangmucIntent);
+                    Intent hangmucIntent = new Intent();
+                    hangmucIntent.setClass(getContext(), HangMucKiemTra.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("FACTORY", g_spFactory);
+                    bundle.putString("DEPNO", g_maBP);
+                    bundle.putString("DEPNAME", g_tenBP);
+                    bundle.putString("DATE", g_ngay);
+                    bundle.putString("USER", Constant_Class.UserID);
+                    hangmucIntent.putExtras(bundle);
+                    startActivity(hangmucIntent);
+                }
+                else{
+                    Toast.makeText(getContext(), "Bộ phận rỗng!", Toast.LENGTH_SHORT).show();
+                }
+                dismiss();
             }
         });
 
@@ -146,4 +162,5 @@ public class LoginDialogFragment extends DialogFragment {
             }
         });
     }
+
 }
