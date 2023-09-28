@@ -260,6 +260,7 @@ public class Search_Dialog extends DialogFragment {
                 Intent intent = new Intent(getContext(), ThuVien_Anh.class);
                 intent.putExtra("ngay", date);
                 intent.putExtra("bophan", g_tc_fcd006);
+                intent.putExtra("hangmuclon", g_position);
                 intent.putExtra("hangmuc", g_tc_fcc05);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Thêm cờ vào Intent
                 startActivity(intent);

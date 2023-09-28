@@ -132,7 +132,7 @@ public class HangMucKiemTra extends AppCompatActivity {
                 g_maBP,
                 this::onCaptureImageClick);*/
         hangMucKiemTra_adapter = new HangMucKiemTra_Adapter(getApplicationContext(),
-                R.layout.mt01_hang_muc_main_item,
+                R.layout.mt01_hang_muc_main_item,g_hangMucPosition,
                 hangmucChiTiet_list,
                 g_ngay,
                 g_maBP);

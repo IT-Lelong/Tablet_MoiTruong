@@ -33,13 +33,15 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
     private final List<HangMucKiemTra_Model> hangmucChiTiet_list;
     private String g_ngay;
     private String g_maBP;
+    private int position_hmlon;
     DecimalFormat decimalFormat;
     //private OnCaptureImageClickListener captureImageClickListener;
 
     //public HangMucKiemTra_Adapter(Context context, int mt01_hang_muc_main_item, List<HangMucKiemTra_Model> hangmucChiTiet_list, String g_ngay, String g_maBP, OnCaptureImageClickListener listener) {
-    public HangMucKiemTra_Adapter(Context context, int mt01_hang_muc_main_item, List<HangMucKiemTra_Model> hangmucChiTiet_list, String g_ngay, String g_maBP) {
+    public HangMucKiemTra_Adapter(Context context, int mt01_hang_muc_main_item,int position_hmlon, List<HangMucKiemTra_Model> hangmucChiTiet_list, String g_ngay, String g_maBP) {
         this.context = context;
         this.layout_resource = mt01_hang_muc_main_item;
+        this.position_hmlon = position_hmlon;
         this.hangmucChiTiet_list = hangmucChiTiet_list;
         this.g_ngay = g_ngay;
         this.g_maBP = g_maBP;
@@ -135,10 +137,11 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
             public void onClick(View v) {
                 //Toast.makeText(context, "GALLERY " + adapterPosition, Toast.LENGTH_SHORT).show();
                 String g_tc_fcc005 = hangmucChiTiet_list.get(adapterPosition).getG_tc_fcc005();
-
+                int a = position_hmlon;
                 Intent intent = new Intent(context, ThuVien_Anh.class);
                 intent.putExtra("ngay", g_ngay);
                 intent.putExtra("bophan", g_maBP);
+                intent.putExtra("hangmuclon", String.valueOf(position_hmlon));
                 intent.putExtra("hangmuc", g_tc_fcc005);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Thêm cờ vào Intent
                 context.startActivity(intent);

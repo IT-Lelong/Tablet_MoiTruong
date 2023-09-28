@@ -33,7 +33,7 @@ public class ThuVien_Anh extends AppCompatActivity {
     private ViewPager2 viewPager;
     private TabLayout dotsLayout;
 
-    String selectedDate,selectedDepartment,selectedDetail;
+    String selectedDate,selectedDepartment,selectedDetail,selectedKiemtra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class ThuVien_Anh extends AppCompatActivity {
         Intent intent = getIntent();
         selectedDate = intent.getStringExtra("ngay");
         selectedDepartment = intent.getStringExtra("bophan");
+        selectedKiemtra = intent.getStringExtra("hangmuclon");
         selectedDetail = intent.getStringExtra("hangmuc");
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -113,7 +114,7 @@ public class ThuVien_Anh extends AppCompatActivity {
     private List<ImageGroup> generateSampleData() {
         List<File> imageFiles = getImageFiles();
         List<ImageGroup> imageGroups = new ArrayList<>();
-        Cursor getGroup = Cre_db.getGroup(selectedDate, selectedDetail,selectedDepartment);
+        Cursor getGroup = Cre_db.getGroup(selectedKiemtra,selectedDate, selectedDetail,selectedDepartment);
         getGroup.moveToFirst();
         //Open FOR
         int a = getGroup.getCount();
