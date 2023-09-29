@@ -510,7 +510,7 @@ public class Create_Table {
     }
 
     public void update_imagecount(String selectedDetail, String selectedDate, String selectedDepartment, String g_user) {
-        String g_tc_fce008;
+        String g_tc_fce006 = "true",g_tc_fce008;
         Cursor c = db.rawQuery(" SELECT tc_fce008 FROM tc_fce_file " +
                 " WHERE tc_fce001 ='" + selectedDetail + "' " +
                 " AND tc_fce002 ='" + selectedDate + "' " +
@@ -519,11 +519,21 @@ public class Create_Table {
         c.moveToFirst();
         g_tc_fce008 = String.valueOf(Integer.parseInt(c.getString(0)) - 1);
 
-        db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' " +
-                " WHERE tc_fce001 ='" + selectedDetail + "' " +
-                " AND tc_fce002 ='" + selectedDate + "'" +
-                " AND tc_fce003 = '" + g_user + "'" +
-                " AND tc_fce004 = '" + selectedDepartment + "' ");
+        if (g_tc_fce008.equals("0")) {
+            db.execSQL(" Delete FROM tc_fce_file   " +
+                    " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                    " AND tc_fce002 ='" + selectedDate + "'" +
+                    " AND tc_fce003 = '" + g_user + "'" +
+                    " AND tc_fce004 = '" + selectedDepartment + "' ");
+        }else {
+            db.execSQL(" UPDATE tc_fce_file SET tc_fce008 = '" + g_tc_fce008 + "' , tc_fce006 = '" + g_tc_fce006 + "'   " +
+                    " WHERE tc_fce001 ='" + selectedDetail + "' " +
+                    " AND tc_fce002 ='" + selectedDate + "'" +
+                    " AND tc_fce003 = '" + g_user + "'" +
+                    " AND tc_fce004 = '" + selectedDepartment + "' ");
+        }
+        
+
         c.close();
     }
 
@@ -620,7 +630,8 @@ public class Create_Table {
 
     public Cursor getChartCompleteData() {
         //select max(tc_fcd002) max_tc_fcd002  from tc_fcd_filemColumns = {String[1]@33400} ["g_count"]
-        String selectQuery = " select tc_fce004, tc_fcd004,tc_fcd005, round((CAST(sum(tc_fce008) as REAL) / (select sum(tc_fce008) total from tc_fce_file where tc_fce002 = (select max(tc_fce002) from tc_fce_file)) ) * 100   ,2)  g_count " +
+        String selectQuery = " select tc_fce004, tc_fcd004,tc_fcd005, " +
+                "( case when ( select sum(tc_fce008) total from tc_fce_file where tc_fce002 = (select max(tc_fce002) from tc_fce_file)) = 0 then 0 else   round((CAST(sum(tc_fce008) as REAL) / (select sum(tc_fce008) total from tc_fce_file where tc_fce002 = (select max(tc_fce002) from tc_fce_file)) ) * 100   ,2)  end ) g_count   " +
                 " from tc_fce_file ,tc_fcd_file " +
                 " where tc_fcd006= tc_fce004 and tc_fce002 = (select max(tc_fce002) from tc_fce_file)  group by tc_fce004  ";
 

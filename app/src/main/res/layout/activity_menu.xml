@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/menuID"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:hint="Name"
@@ -47,11 +47,4 @@
         </TableRow>
 
     </TableLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="50dp"
-        app:srcCompat="@drawable/backgroundhse" />
-
 </LinearLayout>

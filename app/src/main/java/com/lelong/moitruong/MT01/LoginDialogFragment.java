@@ -98,21 +98,26 @@ public class LoginDialogFragment extends DialogFragment {
                 }
 
                 if (cur_getdata.getCount() > 0) {
+                    department_List.clear();
                     cur_getdata.moveToFirst();
+                    String materialInfo = null;
                     for (int i = 0; i < cur_getdata.getCount(); i++) {
                         String g_ten = cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd004"));
                         String g_xuong = cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd005"));
-                        String materialInfo = g_ten + " - " + g_xuong;
+                        if (g_xuong.equals("null")) {
+                            materialInfo = g_ten;
+                        } else {
+                            materialInfo = g_ten + " - " + g_xuong;
+                        }
                         department_List.add(materialInfo);
                         cur_getdata.moveToNext();
                     }
-                }
-                else
-                {
+                } else {
                     department_List.clear();
                 }
+
                 Cursor getDepartment_today = Cre_db.getDepartment_today(String.valueOf(dateFormat.format(new Date())));
-                final Spinner_Adapter department_adapter = new Spinner_Adapter(getContext(),getDepartment_today, department_List);
+                final Spinner_Adapter department_adapter = new Spinner_Adapter(getContext(), getDepartment_today, department_List);
                 sp_department.setAdapter(department_adapter);
             }
 
@@ -126,16 +131,20 @@ public class LoginDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 int g_spDepPosition = sp_department.getSelectedItemPosition();
-                String g_maBP=null,g_spFactory=null,g_tenBP=null,g_ngay=null;
-                if (g_spDepPosition >= 0){
+                String g_maBP = null, g_spFactory = null, g_tenBP = null, g_ngay = null;
+                if (g_spDepPosition >= 0) {
                     cur_getdata.moveToPosition(g_spDepPosition);
                     String g_tc_fcd003 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd003")));
                     String g_tc_fcd004 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd004")));
                     String g_tc_fcd005 = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd005")));
                     g_maBP = String.valueOf(cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("tc_fcd006")));
                     g_spFactory = String.valueOf(sp_factory.getSelectedItem());
+                    if (g_tc_fcd005.equals("null")) {
+                        g_tc_fcd005 = "";
+                    }
                     g_tenBP = g_tc_fcd003 + " " + g_tc_fcd004 + " " + g_tc_fcd005;
                     g_ngay = tv_ngaykiemtra.getText().toString();
+
 
                     Intent hangmucIntent = new Intent();
                     hangmucIntent.setClass(getContext(), HangMucKiemTra.class);
@@ -147,8 +156,7 @@ public class LoginDialogFragment extends DialogFragment {
                     bundle.putString("USER", Constant_Class.UserID);
                     hangmucIntent.putExtras(bundle);
                     startActivity(hangmucIntent);
-                }
-                else{
+                } else {
                     Toast.makeText(getContext(), "Bộ phận rỗng!", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();

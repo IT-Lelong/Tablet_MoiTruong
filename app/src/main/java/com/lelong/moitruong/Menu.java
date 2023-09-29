@@ -147,11 +147,12 @@ public class Menu extends AppCompatActivity implements Call_interface {
                         if(cursor.getCount() > 0) {
                             cursor.moveToFirst();
                             Constant_Class.UserID = ID;
-                            Constant_Class.UserName_zh = cursor.getString(cursor.getColumnIndexOrThrow("CPF02"));
-                            Constant_Class.UserName_vn = cursor.getString(cursor.getColumnIndexOrThrow("TA_CPF001"));
-                            Constant_Class.UserDepID = cursor.getString(cursor.getColumnIndexOrThrow("CPF29"));
-                            Constant_Class.UserDepName = cursor.getString(cursor.getColumnIndexOrThrow("GEM02"));
-                            Constant_Class.UserFactory = cursor.getString(cursor.getColumnIndexOrThrow("CPF281"));
+                            Constant_Class.UserName_zh = cursor.getString(cursor.getColumnIndexOrThrow("cpf02"));
+                            Constant_Class.UserName_vn = cursor.getString(cursor.getColumnIndexOrThrow("ta_cpf001"));
+                            Constant_Class.UserDepID = cursor.getString(cursor.getColumnIndexOrThrow("cpf29"));
+                            Constant_Class.UserDepName = cursor.getString(cursor.getColumnIndexOrThrow("gem02"));
+                            Constant_Class.UserFactory = cursor.getString(cursor.getColumnIndexOrThrow("cpf281"));
+                            menuID.setText(ID + " " + Constant_Class.UserName_vn + "\n" + Constant_Class.UserDepName);
                         }
                     }
                 }

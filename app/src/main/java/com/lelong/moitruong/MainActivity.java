@@ -247,11 +247,74 @@ public class MainActivity extends AppCompatActivity {
                     conn.setReadTimeout(10000);
                     conn.setDoInput(true);
                     conn.setDoOutput(true);
-                    conn.connect();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-                    String result = reader.readLine();
-                    reader.close();
-                    if (result.contains("PASS")) {
+                    //conn.connect();
+                    // Kiểm tra kết nối trước khi thực hiện kết nối
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                        String result = reader.readLine();
+                        reader.close();
+                        // Xử lý dữ liệu kết quả ở đây
+                        if (result.contains("PASS")) {
+                            if (SaveCheck.isChecked()) {
+                                db.execSQL("DELETE FROM " + TABLE_NAME + "");
+                                ContentValues args = new ContentValues();
+                                args.put(accID, ID);
+                                args.put(pass, PASSWORD);
+                                db.insert(TABLE_NAME, null, args);
+                            } else {
+                                db.execSQL("DELETE FROM " + TABLE_NAME + "");
+                            }
+
+                            try {
+                                JSONArray jsonarray = new JSONArray(result);
+                                for (int i = 0; i < jsonarray.length(); i++) {
+                                    JSONObject jsonObject = jsonarray.getJSONObject(i);
+                                    Constant_Class.UserXuong = jsonObject.getString("TC_QRH003");
+                                    Constant_Class.UserKhau = jsonObject.getString("TC_QRH005");
+                                    Constant_Class.UserTramQR = jsonObject.getString("TC_QRH006");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            Intent login = new Intent();
+                            login.setClass(MainActivity.this, Menu.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("ID", editID.getText().toString());
+                            login.putExtras(bundle);
+                            startActivity(login);
+                        } else if (result.contains("FALSE")) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast alert = Toast.makeText(MainActivity.this, getString(R.string.main_E02), Toast.LENGTH_LONG);
+                                    alert.show();
+                                }
+                            });
+                        }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Toast alert = Toast.makeText(MainActivity.this, getString(R.string.main_E03), Toast.LENGTH_LONG);
+                                //alert.show();
+                                int g_check = Cre_db.checkUserData(editID.getText().toString().trim());
+                                if (g_check == 0) {
+                                    Toast alert = Toast.makeText(MainActivity.this, getString(R.string.main_E02), Toast.LENGTH_LONG);
+                                    alert.show();
+                                } else {
+                                    Intent login = new Intent();
+                                    login.setClass(MainActivity.this, Menu.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("ID", editID.getText().toString());
+                                    login.putExtras(bundle);
+                                    startActivity(login);
+                                }
+                            }
+                        });
+                    }
+                    /*if (result.contains("PASS")) {
                         if (SaveCheck.isChecked()) {
                             db.execSQL("DELETE FROM " + TABLE_NAME + "");
                             ContentValues args = new ContentValues();
@@ -308,13 +371,25 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                    }
+                    }*/
                 } catch (Exception e) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast alert = Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG);
-                            alert.show();
+                            //Toast alert = Toast.makeText(MainActivity.this, getString(R.string.main_E03), Toast.LENGTH_LONG);
+                            //alert.show();
+                            int g_check = Cre_db.checkUserData(editID.getText().toString().trim());
+                            if (g_check == 0) {
+                                Toast alert = Toast.makeText(MainActivity.this, getString(R.string.main_E02), Toast.LENGTH_LONG);
+                                alert.show();
+                            } else {
+                                Intent login = new Intent();
+                                login.setClass(MainActivity.this, Menu.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("ID", editID.getText().toString());
+                                login.putExtras(bundle);
+                                startActivity(login);
+                            }
                         }
                     });
                 }

@@ -60,14 +60,20 @@ public class Spinner_Adapter extends ArrayAdapter<String> {
         }
         return convertView;
     }
+
     private boolean isItemInCursor(String item, Cursor cursor) {
+        String materialInfo = null;
         if (cursor == null || !cursor.moveToFirst()) {
             return false;
         }
         for (int i = 0; i < cursor.getCount(); i++) {
             String g_ten = cursor.getString(cursor.getColumnIndexOrThrow("tc_fcd004"));
             String g_xuong = cursor.getString(cursor.getColumnIndexOrThrow("tc_fcd005"));
-            String materialInfo = g_ten + " - " + g_xuong;
+            if (g_xuong.equals("null")) {
+                materialInfo = g_ten;
+            } else {
+                materialInfo = g_ten + " - " + g_xuong;
+            }
             if (item.equals(materialInfo)) {
                 return true;
             }

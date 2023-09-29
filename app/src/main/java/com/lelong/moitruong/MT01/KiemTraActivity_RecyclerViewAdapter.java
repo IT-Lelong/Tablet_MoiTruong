@@ -21,10 +21,11 @@ public class KiemTraActivity_RecyclerViewAdapter extends RecyclerView.Adapter<Ki
     private Cursor cursor;
     private Context context;
 
-    public KiemTraActivity_RecyclerViewAdapter(Context context,Cursor cursor) {
+    public KiemTraActivity_RecyclerViewAdapter(Context context, Cursor cursor) {
         this.cursor = cursor;
         this.context = context;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,6 +59,9 @@ public class KiemTraActivity_RecyclerViewAdapter extends RecyclerView.Adapter<Ki
                 String g_ngay = cursor.getString(cursor.getColumnIndexOrThrow("tc_fce002"));
                 //String g_user = cursor.getString(cursor.getColumnIndexOrThrow("tc_fce003"));
                 String g_tc_fcd003 = cursor.getString(cursor.getColumnIndexOrThrow("tc_fcd003"));
+                if (g_donvi.equals("null")) {
+                    g_donvi = "";
+                }
                 String g_tenBP = g_tc_fcd003 + " " + g_donvi;
 
                 Intent hangmucIntent = new Intent(context, HangMucKiemTra.class);
@@ -82,7 +86,7 @@ public class KiemTraActivity_RecyclerViewAdapter extends RecyclerView.Adapter<Ki
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_stt,tv_donvi,tv_ngay,tv_loi;
+        public TextView tv_stt, tv_donvi, tv_ngay, tv_loi;
         //public ImageView img_galery;
 
         public ViewHolder(View itemView) {
