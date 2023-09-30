@@ -48,8 +48,7 @@ public class Search_Dialog extends DialogFragment {
     private static final int REQUEST_IMAGE_CAPTURE = 99;
     private Create_Table Cre_db = null;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    Spinner hm_kiemtra, hm_con,sp_bophan;
-    EditText edt_date;
+    Spinner hm_kiemtra, hm_con,sp_bophan,sp_tuan;
     Button btnOk, btnCancel;
     Cursor cur_getbophan;
     private String myVariable;
@@ -92,7 +91,7 @@ public class Search_Dialog extends DialogFragment {
     //OnDialogResultListener callback;
 
     private void addControl(View view) {
-        edt_date = view.findViewById(R.id.edt_date);
+        sp_tuan = view.findViewById(R.id.sp_tuan);
         hm_kiemtra = view.findViewById(R.id.hm_kiemtra);
         hm_con= view.findViewById(R.id.hm_con);
         sp_bophan = view.findViewById(R.id.sp_bophan);
@@ -102,6 +101,18 @@ public class Search_Dialog extends DialogFragment {
         List<String> kiemtra_List = new ArrayList<>();
         List<String> con_List = new ArrayList<>();
         List<String> bophan_List = new ArrayList<>();
+        List<String> tuan_List = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM/yyyy", Locale.getDefault());
+
+        for (int i = 0; i >= -10; i--) { // Hiển thị 8 tuần gần nhất trở về trước
+            String monthYear = monthFormat.format(calendar.getTime());
+            int weekInMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            //weeks.add(new WeekData(weekInMonth, monthYear));
+            String tuan = monthYear + " - " + String.valueOf(weekInMonth);
+            tuan_List.add(tuan);
+            calendar.add(Calendar.DAY_OF_MONTH, -7); // Chuyển sang tuần trước đó
+        }
         Cursor curs_hangmuclon = Cre_db.getHangMucLon();
         curs_hangmuclon.moveToFirst();
         for (int i = 0; i < curs_hangmuclon.getCount(); i++) {
@@ -114,12 +125,13 @@ public class Search_Dialog extends DialogFragment {
         //factory_List.add("Đức Hòa");
         //factory_List.add("Bến Lức");
 
-
+        ArrayAdapter<String> tuan_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, tuan_List);
         ArrayAdapter<String> kiemtra_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, kiemtra_List);
         ArrayAdapter<String> bophan_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, bophan_List);
         hm_kiemtra.setAdapter(kiemtra_adapter);
         hm_kiemtra.setSelection(kiemtra_List.size() - 1);
         sp_bophan.setAdapter(bophan_adapter);
+        sp_tuan.setAdapter(tuan_adapter);
         String xuong= null;
         cur_getbophan = null;
         cur_getbophan = Cre_db.getdata_tc_fcd(Constant_Class.UserFactory);
@@ -136,7 +148,7 @@ public class Search_Dialog extends DialogFragment {
             bophan_adapter.notifyDataSetChanged();
             sp_bophan.setSelection(bophan_List.size() - 1);
         }
-        edt_date.setOnClickListener(new View.OnClickListener() {
+        /*edt_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Lấy ngày, tháng và năm hiện tại
@@ -165,7 +177,7 @@ public class Search_Dialog extends DialogFragment {
                 // Hiển thị DatePickerDialog
                 datePickerDialog.show();
             }
-        });
+        });*/
 
         hm_kiemtra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -208,7 +220,8 @@ public class Search_Dialog extends DialogFragment {
                     g_tc_fcc05="";
                 } else {*/
                     // Checkbox chưa được kiểm tra, thực hiện hành động khác (nếu cần)
-                    date = edt_date.getText().toString();
+                    //date = edt_date.getText().toString();
+                    String tuan_thang = sp_tuan.getSelectedItem().toString();
                     int g_bpPosition = sp_bophan.getSelectedItemPosition();
                     int g_hmkiemtraPosition = hm_kiemtra.getSelectedItemPosition();
                     int g_conPosition = hm_con.getSelectedItemPosition();
@@ -258,7 +271,8 @@ public class Search_Dialog extends DialogFragment {
                 //}
                 dismiss();
                 Intent intent = new Intent(getContext(), ThuVien_Anh.class);
-                intent.putExtra("ngay", date);
+                intent.putExtra("ngay", "");
+                intent.putExtra("tuan", tuan_thang);
                 intent.putExtra("bophan", g_tc_fcd006);
                 intent.putExtra("hangmuclon", g_position);
                 intent.putExtra("hangmuc", g_tc_fcc05);
