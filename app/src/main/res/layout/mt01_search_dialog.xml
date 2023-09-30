@@ -37,7 +37,7 @@
                 android:textSize="15sp"
                 android:textColor="@color/MidnightGreen"
                 android:textStyle="bold"
-                android:text="Ngày" />
+                android:text="Tuần" />
 
             <Spinner
                 android:id="@+id/sp_tuan"
