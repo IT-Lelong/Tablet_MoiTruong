@@ -140,6 +140,7 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
                 int a = position_hmlon;
                 Intent intent = new Intent(context, ThuVien_Anh.class);
                 intent.putExtra("ngay", g_ngay);
+                intent.putExtra("tuan", "");
                 intent.putExtra("bophan", g_maBP);
                 intent.putExtra("hangmuclon", String.valueOf(position_hmlon));
                 intent.putExtra("hangmuc", g_tc_fcc005);
