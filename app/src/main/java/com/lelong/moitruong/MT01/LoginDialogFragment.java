@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -13,9 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,20 +24,30 @@ import com.lelong.moitruong.Constant_Class;
 import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class LoginDialogFragment extends DialogFragment {
+    private OnSpinnerItemSelectedListener onSpinnerItemSelectedListener;
     private Create_Table Cre_db = null;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     Spinner sp_factory, sp_department;
     Button btnOk, btnCancel;
     Cursor cur_getdata;
     TextView tv_ngaykiemtra;
+    int memo_xuong;
+    int memo_bophan;
+
+    public LoginDialogFragment(int memo_xuong, int memo_bophan) {
+        this.memo_xuong = memo_xuong;
+        this.memo_bophan = memo_bophan;
+    }
+
+    public void setSpinnerItemSelectedListener(OnSpinnerItemSelectedListener onClickListener) {
+        onSpinnerItemSelectedListener = onClickListener;
+    }
 
     @NonNull
     @Override
@@ -80,7 +87,7 @@ public class LoginDialogFragment extends DialogFragment {
         ArrayAdapter<String> factory_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, factory_List);
         //ArrayAdapter<String> department_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, department_List);
         sp_factory.setAdapter(factory_adapter);
-
+        sp_factory.setSelection(memo_xuong);
 
         sp_factory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -119,6 +126,7 @@ public class LoginDialogFragment extends DialogFragment {
                 Cursor getDepartment_today = Cre_db.getDepartment_today(String.valueOf(dateFormat.format(new Date())));
                 final Spinner_Adapter department_adapter = new Spinner_Adapter(getContext(), getDepartment_today, department_List);
                 sp_department.setAdapter(department_adapter);
+                sp_department.setSelection(memo_bophan);
             }
 
             @Override
@@ -145,6 +153,9 @@ public class LoginDialogFragment extends DialogFragment {
                     g_tenBP = g_tc_fcd003 + " " + g_tc_fcd004 + " " + g_tc_fcd005;
                     g_ngay = tv_ngaykiemtra.getText().toString();
 
+                    memo_xuong = sp_factory.getSelectedItemPosition();
+                    memo_bophan = sp_department.getSelectedItemPosition();
+                    onSpinnerItemSelectedListener.onItemSelected(memo_xuong,memo_bophan);
 
                     Intent hangmucIntent = new Intent();
                     hangmucIntent.setClass(getContext(), HangMucKiemTra.class);

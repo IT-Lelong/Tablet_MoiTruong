@@ -1,6 +1,7 @@
 package com.lelong.moitruong.MT01;
 
 import androidx.annotation.NonNull;
+import android.util.Size;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -76,7 +77,9 @@ public class OpenCamera extends AppCompatActivity {
 
     private void bindCameraUseCases(@NonNull ProcessCameraProvider cameraProvider) {
         preview = new Preview.Builder().build();
-        imageCapture = new ImageCapture.Builder().build();
+        imageCapture = new ImageCapture.Builder()
+                .setTargetResolution(new Size(1920, 1080))
+                .build();
 
         cameraProvider.unbindAll();
         CameraSelector cameraSelector = new CameraSelector.Builder()

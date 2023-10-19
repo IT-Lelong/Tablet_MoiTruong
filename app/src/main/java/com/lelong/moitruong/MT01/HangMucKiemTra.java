@@ -154,7 +154,7 @@ public class HangMucKiemTra extends AppCompatActivity {
             String g_tc_fce007 = curs_hmChiTiet.getString(curs_hmChiTiet.getColumnIndexOrThrow("tc_fce007"));
             String g_tc_fce008 = curs_hmChiTiet.getString(curs_hmChiTiet.getColumnIndexOrThrow("tc_fce008"));
 
-            hangmucChiTiet_list.add(new HangMucKiemTra_Model(g_tc_fcc004, g_tc_fcc005, g_tc_fcc006, g_tc_fcc007, g_tc_fcc008, g_tc_fce006, g_tc_fce007, g_tc_fce008));
+            hangmucChiTiet_list.add(new HangMucKiemTra_Model(g_tc_fcc004, g_tc_fcc005, g_tc_fcc006, g_tc_fcc007, g_tc_fcc008, g_tc_fce006, g_tc_fce007, g_tc_fce008,g_hangMucPosition));
             curs_hmChiTiet.moveToNext();
         }
 

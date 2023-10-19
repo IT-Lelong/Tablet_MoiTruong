@@ -35,7 +35,7 @@
         <activity
             android:name=".MT01.OpenCamera"
             android:exported="false"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="landscape"/>
         <activity
             android:name=".MT01.ThuVien_Anh"
             android:exported="false"

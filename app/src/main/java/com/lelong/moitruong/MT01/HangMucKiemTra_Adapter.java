@@ -137,7 +137,7 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
             public void onClick(View v) {
                 //Toast.makeText(context, "GALLERY " + adapterPosition, Toast.LENGTH_SHORT).show();
                 String g_tc_fcc005 = hangmucChiTiet_list.get(adapterPosition).getG_tc_fcc005();
-                int a = position_hmlon;
+                position_hmlon = hangmucChiTiet_list.get(adapterPosition).getG_hmLon();
                 Intent intent = new Intent(context, ThuVien_Anh.class);
                 intent.putExtra("ngay", g_ngay);
                 intent.putExtra("tuan", "");

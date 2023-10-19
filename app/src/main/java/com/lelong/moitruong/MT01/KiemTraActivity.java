@@ -21,6 +21,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.lelong.moitruong.ApiInterface;
 import com.lelong.moitruong.Constant_Class;
 import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
@@ -30,12 +31,13 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class KiemTraActivity extends AppCompatActivity {
+public class KiemTraActivity extends AppCompatActivity implements OnSpinnerItemSelectedListener{
     private Create_Table Cre_db = null;
     RecyclerView rcv_kiemtra;
     Button btn_kiemtra, btn_KetChuyen, btn_TraCuu;
     private KiemTraActivity_RecyclerViewAdapter kiemTraActivity_recyclerViewAdapter;
     private PieChart pieChart;
+    int memo_xuong, memo_bophan;
 
     @Override
     protected void onRestart() {
@@ -69,7 +71,9 @@ public class KiemTraActivity extends AppCompatActivity {
         btn_kiemtra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginDialogFragment dialogFragment = new LoginDialogFragment();
+
+                LoginDialogFragment dialogFragment = new LoginDialogFragment(memo_xuong,memo_bophan);
+                dialogFragment.setSpinnerItemSelectedListener(KiemTraActivity.this);
                 dialogFragment.show(getSupportFragmentManager(), "LoginDialogFragment");
             }
         });
@@ -183,4 +187,9 @@ public class KiemTraActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemSelected(int memo_xuong,int memo_bophan) {
+        this.memo_xuong = memo_xuong;
+        this.memo_bophan= memo_bophan;
+    }
 }

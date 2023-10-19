@@ -11,6 +11,7 @@ public class HangMucKiemTra_Model implements Serializable {
     private String g_tc_fcc008;
     private String g_tc_fce007;
     private String g_tc_fce008;
+    private int g_hmLon;
     private String g_tc_fce006;
 
     public void setG_tc_fcc004(String g_tc_fcc004) {
@@ -78,6 +79,10 @@ public class HangMucKiemTra_Model implements Serializable {
     }
 
 
+    public int getG_hmLon() {
+        return g_hmLon;
+    }
+
     public HangMucKiemTra_Model(String g_tc_fcc004,
                                 String g_tc_fcc005,
                                 String g_tc_fcc006,
@@ -85,7 +90,8 @@ public class HangMucKiemTra_Model implements Serializable {
                                 String g_tc_fcc008,
                                 String g_tc_fce006,
                                 String g_tc_fce007,
-                                String g_tc_fce008) {
+                                String g_tc_fce008,
+                                int g_hmLon) {
 
         this.g_tc_fcc004 = g_tc_fcc004;
         this.g_tc_fcc005 = g_tc_fcc005;
@@ -96,5 +102,6 @@ public class HangMucKiemTra_Model implements Serializable {
         this.g_tc_fce006 = g_tc_fce006;
         this.g_tc_fce007 = g_tc_fce007;
         this.g_tc_fce008 = g_tc_fce008;
+        this.g_hmLon = g_hmLon;
     }
 }
