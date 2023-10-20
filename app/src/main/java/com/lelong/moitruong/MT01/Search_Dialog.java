@@ -109,10 +109,24 @@ public class Search_Dialog extends DialogFragment {
             String monthYear = monthFormat.format(calendar.getTime());
             int weekInMonth = calendar.get(Calendar.WEEK_OF_MONTH);
             //weeks.add(new WeekData(weekInMonth, monthYear));
+            int firstDayOfWeek = calendar.getFirstDayOfWeek();
+            calendar.set(Calendar.WEEK_OF_MONTH, weekInMonth);
+
+            //calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+
+            // Đảm bảo ngày đầu của tuần nằm trong tháng hiện tại
+            while (calendar.get(Calendar.WEEK_OF_MONTH) != weekInMonth) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            Date startDate = calendar.getTime();
+            calendar.add(Calendar.DAY_OF_MONTH, 6);
+            Date endDate = calendar.getTime();
             String tuan = monthYear + " - " + String.valueOf(weekInMonth);
             tuan_List.add(tuan);
             calendar.add(Calendar.DAY_OF_MONTH, -7); // Chuyển sang tuần trước đó
         }
+        tuan_List.add("");
         Cursor curs_hangmuclon = Cre_db.getHangMucLon();
         curs_hangmuclon.moveToFirst();
         for (int i = 0; i < curs_hangmuclon.getCount(); i++) {
@@ -132,6 +146,7 @@ public class Search_Dialog extends DialogFragment {
         hm_kiemtra.setSelection(kiemtra_List.size() - 1);
         sp_bophan.setAdapter(bophan_adapter);
         sp_tuan.setAdapter(tuan_adapter);
+        sp_tuan.setSelection(tuan_List.size() - 1);
         String xuong= null;
         cur_getbophan = null;
         cur_getbophan = Cre_db.getdata_tc_fcd(Constant_Class.UserFactory);
