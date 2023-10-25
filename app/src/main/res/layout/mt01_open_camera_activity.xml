@@ -27,10 +27,13 @@
         <SeekBar
             android:id="@+id/zoom_seekbar"
             android:layout_width="200dp"
-            android:layout_height="600dp"
+            android:layout_height="400dp"
             android:layout_gravity="right"
             android:rotation="90"
             android:max="100"
+            android:progressTint="#007FFF"
+            android:thumbTint="#007FFF"
+            android:progressBackgroundTint="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
