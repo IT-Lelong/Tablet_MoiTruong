@@ -4,10 +4,14 @@ import androidx.annotation.NonNull;
 import android.util.Size;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraControl;
+import androidx.camera.core.CameraInfo;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
+import androidx.camera.core.ZoomState;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -17,6 +21,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -38,6 +43,9 @@ public class OpenCamera extends AppCompatActivity {
     private ImageButton captureButton;
     private Preview preview;
     private PreviewView viewFind;
+    private SeekBar zoomSeekBar;
+    private CameraSelector cameraSelector;
+    private ProcessCameraProvider cameraProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +67,52 @@ public class OpenCamera extends AppCompatActivity {
         viewFind = findViewById(R.id.viewFind);
         captureButton = findViewById(R.id.capture_button);
         captureButton.setOnClickListener(view -> takePhoto());
+        zoomSeekBar = findViewById(R.id.zoom_seekbar);
+        zoomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float zoomLevel = (float) progress / 100.0f;
+                setZoom(zoomLevel);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                seekBar.setMax(100);
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                seekBar.setMax(100);
+            }
+        });
 
         startCamera();
+    }
+
+    private void setZoom(float zoomLevel) {
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture);
+        if (camera != null) {
+            CameraInfo cameraInfo = camera.getCameraInfo();
+            CameraControl cameraControl = camera.getCameraControl();
+
+            ZoomState currentZoomState = cameraInfo.getZoomState().getValue();
+
+            if (currentZoomState != null) {
+                float maxZoomRatio = currentZoomState.getMaxZoomRatio();
+                float minZoomRatio = currentZoomState.getMinZoomRatio();
+
+                float targetZoomRatio = minZoomRatio + (maxZoomRatio - minZoomRatio) * zoomLevel;
+
+                cameraControl.setZoomRatio(targetZoomRatio);
+            }
+        }
     }
 
     private void startCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                //ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                cameraProvider = cameraProviderFuture.get();
                 bindCameraUseCases(cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -81,11 +126,11 @@ public class OpenCamera extends AppCompatActivity {
                 .setTargetResolution(new Size(1920, 1080))
                 .build();
 
-        cameraProvider.unbindAll();
-        CameraSelector cameraSelector = new CameraSelector.Builder()
+        cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
+        cameraProvider.unbindAll();
         cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture);
 
         // Liên kết Preview với viewFinder
