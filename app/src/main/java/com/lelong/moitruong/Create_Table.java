@@ -417,7 +417,7 @@ public class Create_Table {
         c.close();
 
         if (tcount == 0) {
-            db.execSQL(" INSERT INTO tc_fce_file VALUES('" + g_tc_fcc005 + "', '" + g_ngay + "', '" + g_User + "','" + g_maBP + "','false','false','" + inputData + "','0')");
+            db.execSQL(" INSERT INTO tc_fce_file VALUES('" + g_tc_fcc005 + "', '" + g_ngay + "', '" + g_User + "','" + g_maBP + "','false','false','" + inputData + "','0','N')");
         } else {
             db.execSQL(" UPDATE tc_fce_file SET tc_fce007 = '" + inputData + "' " +
                     " WHERE tc_fce001 = '" + g_tc_fcc005 + "' " +
