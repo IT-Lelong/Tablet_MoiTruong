@@ -135,6 +135,7 @@ public class MoveDialog extends DialogFragment {
         hm_kiemtra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                con_List.clear();
                 String name_hm_kiemtra = kiemtra_List.get(position);
                 int index = kiemtra_List.indexOf(kiemtra_List.get(position));
                 Cursor curs_hangmuccon = Cre_db.get_hangmucchitiet(String.valueOf(index),"");
