@@ -2,14 +2,26 @@ package com.lelong.moitruong.MT01;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,10 +58,12 @@ public class HangMucKiemTra extends AppCompatActivity {
     List hangmucChiTiet_list;
     HangMucKiemTra_Adapter hangMucKiemTra_adapter;
     TextView tv_ngay, tv_bophan;
+    AutoCompleteTextView autoCompleteTextView;
     Integer g_hangMucPosition = 0;
     private String capturedImageDept;
     private String capturedImageName;
-
+    HangMucKiemTra_AutoList autoCompleteAdapter;
+    Cursor ima_cursor;
 
     @Override
     protected void onResume() {
@@ -73,6 +87,57 @@ public class HangMucKiemTra extends AppCompatActivity {
         //g_user = getbundle.getString("USER");
         addcontrols();
         addEvent();
+    }
+    private void showPopupMenu(View view) {
+        List<String> result_List = new ArrayList<>();
+        List<String> hmct_List = new ArrayList<>();
+        Cursor hm_cursor = Cre_db.getBatteryData();
+        if (hm_cursor.moveToFirst()) {
+            do {
+                String hm_chitiet = hm_cursor.getString(hm_cursor.getColumnIndexOrThrow("tc_fcc007"));
+                hmct_List.add(hm_chitiet);
+            } while (hm_cursor.moveToNext());
+        }
+        String inputString = autoCompleteTextView.getText().toString();
+        for (String chuoi : hmct_List) {
+            if (chuoi.contains(inputString)) {
+                result_List.add(chuoi);
+            }
+        }
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        for (final String muc : result_List) {
+            popupMenu.getMenu().add(muc).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    // Xử lý khi một mục trong menu được chọn
+                    String itemTitle = muc;
+                    if (hm_cursor.moveToFirst()) {
+                        do {
+                            String hmValue = hm_cursor.getString(hm_cursor.getColumnIndexOrThrow("tc_fcc007"));
+                            if (hmValue.equals(itemTitle)) {
+                                String tc_fcc001 = hm_cursor.getString(hm_cursor.getColumnIndexOrThrow("tc_fcc001"));
+                                String tc_fcc002 = hm_cursor.getString(hm_cursor.getColumnIndexOrThrow("tc_fcc002"));
+                                String tc_fcc003 = hm_cursor.getString(hm_cursor.getColumnIndexOrThrow("tc_fcc003"));
+                                String tc_fcc004 = hm_cursor.getString(hm_cursor.getColumnIndexOrThrow("tc_fcc004"));
+                                String tc_fcc005 = hm_cursor.getString(hm_cursor.getColumnIndexOrThrow("tc_fcc005"));
+                                int g_position = Integer.parseInt(tc_fcc003) -1 ;
+                                g_hangMucPosition =g_position;
+                                Call_updateData(g_position, g_ngay, g_maBP, "");
+                                int positionToSelect = Integer.parseInt(tc_fcc004)-1; // Đây là vị trí mục bạn muốn chọn
+                                hangMucKiemTra_adapter.setSelectedPosition(positionToSelect);
+                                autoCompleteTextView.setText("");
+                                break;
+                            }
+                        } while (hm_cursor.moveToNext());
+                    }
+                    //Toast.makeText(getApplicationContext(), "Bạn đã chọn: " + itemTitle, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+        }
+        popupMenu.setGravity(Gravity.LEFT);
+
+        popupMenu.show();
     }
 
     private void addEvent() {
@@ -102,9 +167,83 @@ public class HangMucKiemTra extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 g_hangMucPosition = position;
                 Call_updateData(position, g_ngay, g_maBP, "");
+                hangMucKiemTra_adapter.setSelectedPosition(-1);
             }
         });
         //Chọn hạng mục lớn và truy xuất dữ liệu hạng mục kiểm tra (E)
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Được gọi khi văn bản thay đổi (có thể theo dõi sự kiện nhập và xử lý tại đây)
+                List<String> hmct_List = new ArrayList<>();
+                ima_cursor = Cre_db.getBatteryData();
+                if (ima_cursor.moveToFirst()) {
+                    do {
+                        String hmct = ima_cursor.getString(ima_cursor.getColumnIndexOrThrow("tc_fcc007"));
+                        hmct_List.add(hmct);
+                    } while (ima_cursor.moveToNext());
+                }
+                autoCompleteAdapter = new HangMucKiemTra_AutoList(HangMucKiemTra.this, hmct_List);
+                autoCompleteTextView.setAdapter(autoCompleteAdapter);
+                autoCompleteTextView.setThreshold(2);
+                String userInput = s.toString();
+                String selectedText = autoCompleteTextView.getText().toString();
+                if (ima_cursor.moveToFirst()) {
+                    do {
+                        String hmValue = ima_cursor.getString(ima_cursor.getColumnIndexOrThrow("tc_fcc007"));
+                        if (hmValue.equals(selectedText)) {
+                            String tc_fcc001 = ima_cursor.getString(ima_cursor.getColumnIndexOrThrow("tc_fcc001"));
+                            String tc_fcc002 = ima_cursor.getString(ima_cursor.getColumnIndexOrThrow("tc_fcc002"));
+                            String tc_fcc003 = ima_cursor.getString(ima_cursor.getColumnIndexOrThrow("tc_fcc003"));
+                            String tc_fcc004 = ima_cursor.getString(ima_cursor.getColumnIndexOrThrow("tc_fcc004"));
+                            String tc_fcc005 = ima_cursor.getString(ima_cursor.getColumnIndexOrThrow("tc_fcc005"));
+                            int g_position = Integer.parseInt(tc_fcc003) -1 ;
+                            g_hangMucPosition =g_position;
+                            Call_updateData(g_position, g_ngay, g_maBP, "");
+                            int positionToSelect = Integer.parseInt(tc_fcc004)-1; // Đây là vị trí mục bạn muốn chọn
+                            hangMucKiemTra_adapter.setSelectedPosition(positionToSelect);
+                            autoCompleteTextView.setText("");
+                            break;
+                        }
+                    } while (ima_cursor.moveToNext());
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Được gọi sau khi văn bản thay đổi
+            }
+        });
+
+        autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Drawable[] drawables = autoCompleteTextView.getCompoundDrawables();
+                    Drawable drawableRight = drawables[2]; // 2 là chỉ số của drawable bên phải
+
+                    if (drawableRight != null) {
+                        int drawableRightWidth = drawableRight.getIntrinsicWidth();
+                        int right = v.getRight();
+
+                        if (event.getRawX() >= (right - drawableRightWidth)) {
+                            // Xử lý sự kiện khi người dùng click vào drawable bên phải
+                            // Thêm mã xử lý ở đây
+                            showPopupMenu(v);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
+
     }
 
     private void addcontrols() {
@@ -115,6 +254,7 @@ public class HangMucKiemTra extends AppCompatActivity {
         lv_hangmuclon = findViewById(R.id.lv_hangmuclon);
         tv_ngay = findViewById(R.id.tv_ngay);
         tv_bophan = findViewById(R.id.tv_bophan);
+        autoCompleteTextView =findViewById(R.id.autoCT_hm);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HangMucKiemTra.this);
         rcv_hangmuc.setLayoutManager(linearLayoutManager);

@@ -46,8 +46,10 @@ public class MoveDialog extends DialogFragment {
     Spinner hm_kiemtra, hm_con,sp_bophan;
     Button btnOk, btnCancel;
     Cursor cur_getbophan;
+    Cursor g_dataimage;
     private String myVariable;
     String result;
+    String g_hmlon,g_hmct,g_bp;
     // Constructor không đối số bắt buộc
     public MoveDialog() {
     }
@@ -90,7 +92,18 @@ public class MoveDialog extends DialogFragment {
         sp_bophan = view.findViewById(R.id.sp_bophan);
         btnOk = view.findViewById(R.id.btnOk);
         btnCancel = view.findViewById(R.id.btnCancel);
-
+        g_dataimage = Cre_db.getDataImage(myVariable);
+        if (g_dataimage.getCount() > 0) {
+            g_dataimage.moveToFirst();
+            for (int i = 0; i < g_dataimage.getCount(); i++) {
+                g_hmlon = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcb005"));
+                g_hmct = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcc007"));
+                String g_bp1 = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcd004"));
+                String g_bp2 = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcd005"));
+                g_bp = g_bp1 + " - " + g_bp2;
+                g_dataimage.moveToNext();
+            }
+        }
         List<String> kiemtra_List = new ArrayList<>();
         List<String> con_List = new ArrayList<>();
         List<String> bophan_List = new ArrayList<>();
@@ -109,6 +122,13 @@ public class MoveDialog extends DialogFragment {
         ArrayAdapter<String> kiemtra_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, kiemtra_List);
         ArrayAdapter<String> bophan_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, bophan_List);
         hm_kiemtra.setAdapter(kiemtra_adapter);
+        for (int i = 0; i < kiemtra_List.size(); i++) {
+            String item = (String) kiemtra_List.get(i);
+            if (item.equals(g_hmlon)) {
+                hm_kiemtra.setSelection(i);
+                break;
+            }
+        }
         sp_bophan.setAdapter(bophan_adapter);
         String xuong= null;
         /*String g_user = Constant_Class.UserID;
@@ -131,6 +151,13 @@ public class MoveDialog extends DialogFragment {
                 cur_getbophan.moveToNext();
             }
             bophan_adapter.notifyDataSetChanged();
+            for (int i = 0; i < bophan_List.size(); i++) {
+                String item = (String) bophan_List.get(i);
+                if (item.equals(g_bp)) {
+                    sp_bophan.setSelection(i);
+                    break;
+                }
+            }
         }
         hm_kiemtra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -147,6 +174,13 @@ public class MoveDialog extends DialogFragment {
                 }
                 ArrayAdapter<String> con_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, con_List);
                 hm_con.setAdapter(con_adapter);
+                for (int i = 0; i < con_List.size(); i++) {
+                    String item = (String) con_List.get(i);
+                    if (item.equals(g_hmct)) {
+                        hm_con.setSelection(i);
+                        break;
+                    }
+                }
             }
 
             @Override

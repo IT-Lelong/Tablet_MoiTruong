@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
     private String g_ngay;
     private String g_maBP;
     private int position_hmlon;
+    private int selectedPosition = -1; // Vị trí được chọn
     DecimalFormat decimalFormat;
     //private OnCaptureImageClickListener captureImageClickListener;
 
@@ -79,12 +81,17 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
         String g_tc_fce007 = hangmucChiTiet_list.get(adapterPosition).getG_tc_fce007(); //Ghi chú
         holder.edt_ghichu.setText(Objects.requireNonNullElse(g_tc_fce007, ""));
 
+        if (position == selectedPosition) {
+            holder.itemView.setBackgroundColor(Color.parseColor("#FFFDD0"));
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
         holder.edt_ghichu.addTextChangedListener(new TextWatcher() {
             private String originalText = "";
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Lưu trữ nội dung gốc của EditText trước khi thay đổi
+                // Lưu trữ +nội dung gốc của EditText trước khi thay đổi
                 originalText = s.toString();
             }
 
@@ -154,11 +161,16 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
     public int getItemCount() {
         return hangmucChiTiet_list.size();
     }
+    public void setSelectedPosition(int position) {
+        selectedPosition = position;
+        notifyDataSetChanged(); // Cập nhật lại RecyclerView để vẽ lại các mục
+    }
 
     public static class DataViewHolder extends RecyclerView.ViewHolder {
         TextView tv_stt, tv_thuyetminh, tv_trangthai, tv_slAnhLoi;
         EditText edt_ghichu;
         ImageView img_camera, img_gallery;
+        AutoCompleteTextView autoCompleteTextView;
 
         public DataViewHolder(View itemView) {
             super(itemView);
@@ -170,6 +182,7 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
             edt_ghichu = itemView.findViewById(R.id.edt_ghichu);
             img_camera = itemView.findViewById(R.id.img_camera);
             img_gallery = itemView.findViewById(R.id.img_gallery);
+            autoCompleteTextView = itemView.findViewById(R.id.autoCT_hm);
 
             // set sự kiện onClick cho item
             /*itemView.setOnClickListener(new View.OnClickListener() {
