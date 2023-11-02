@@ -28,6 +28,7 @@ import com.lelong.moitruong.MT01.LoginDialogFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -270,6 +271,7 @@ public class Menu extends AppCompatActivity implements Call_interface {
                 case R.id.btn_MT01: {
                     //LoginDialogFragment dialogFragment = new LoginDialogFragment();
                     //dialogFragment.show(getSupportFragmentManager(), "MyDialogFragment");
+                    UpdateData();
                     Intent mt01_intent = new Intent();
                     mt01_intent.setClass(Menu.this, KiemTraActivity.class);
                     startActivity(mt01_intent);
@@ -290,4 +292,20 @@ public class Menu extends AppCompatActivity implements Call_interface {
             }
         }
     };
+    private void UpdateData(){
+        Cursor g_data = Cre_db.getData();
+        g_data.moveToFirst();
+        for (int x = 0; x < g_data.getCount(); x++) {
+            String tc_fcf005 = g_data.getString(g_data.getColumnIndexOrThrow("tc_fcf005"));
+            String tc_fcf002 = g_data.getString(g_data.getColumnIndexOrThrow("tc_fcf002"));
+            Cre_db.delete_Image(tc_fcf005);
+            String image_path = "/storage/emulated/0/Android/media/com.lelong.moitruong/" + tc_fcf002.replace("-", "") + "/" + tc_fcf005;
+            File imageFile = new File(image_path);
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+            g_data.moveToNext();
+        }
+        Cre_db.UpdateData();
+    }
 }

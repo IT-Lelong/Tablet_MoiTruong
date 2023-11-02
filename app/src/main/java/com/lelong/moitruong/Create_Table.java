@@ -676,4 +676,18 @@ public class Create_Table {
                 " AND tc_fcf005='"+ name +"' ORDER BY tc_fcb005,tc_fcc007,tc_fcd004,tc_fcd005";
         return db.rawQuery(selectQuery, null);
     }
+
+    public void UpdateData() {
+        try {
+            db.execSQL("DELETE FROM tc_fce_file WHERE tc_fce002 < DATE('now', '-2 months') ");
+        } catch (Exception e) {
+            String ex = e.getMessage().toString();
+        }
+    }
+    public Cursor getData() {
+        String selectQuery = "SELECT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcf004,tc_fcf005 " +
+                " FROM tc_fcf_file WHERE tc_fcf002 < DATE('now', '-2 months') ORDER BY tc_fcf005";
+        return db.rawQuery(selectQuery, null);
+    }
+
 }
