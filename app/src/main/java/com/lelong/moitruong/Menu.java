@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -171,23 +172,35 @@ public class Menu extends AppCompatActivity implements Call_interface {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        boolean containsValue = false;
         switch (item.getItemId()) {
             case R.id.refresh_datatable:
+                String mBoPhan[] = {"ABC3100000", "ABI3100000"};
+                containsValue = Arrays.stream(mBoPhan).anyMatch(value -> value.equals(Constant_Class.UserDepID));
+                if (containsValue ){
+                    Cre_db.delete_table();
+                    dialog = new Dialog(this);
+                    dialog.setContentView(R.layout.data_sync_layout);
+                    tv_syncName = dialog.findViewById(R.id.tv_syncName);
+                    progressBar = dialog.findViewById(R.id.impotDataProgressBar);
 
-                Cre_db.delete_table();
-                dialog = new Dialog(this);
-                dialog.setContentView(R.layout.data_sync_layout);
-                tv_syncName = dialog.findViewById(R.id.tv_syncName);
-                progressBar = dialog.findViewById(R.id.impotDataProgressBar);
-
-                tv_syncName.setText("");
-                currentIndex = 0;
-                runNextTask();
-                dialog.show();
+                    tv_syncName.setText("");
+                    currentIndex = 0;
+                    runNextTask();
+                    dialog.show();
+                }else{
+                    Toast.makeText(Menu.this, "Tài khoản không có quyền hạn sử dụng!", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.clear_data:
-                Cre_db.delete_DataTable();
+                String mBoPhan_vt[] = {"ABI3100000"};
+                containsValue = Arrays.stream(mBoPhan_vt).anyMatch(value -> value.equals(Constant_Class.UserDepID));
+                if (containsValue ){
+                    Cre_db.delete_DataTable();
+                }else{
+                    Toast.makeText(Menu.this, "Tài khoản không có quyền hạn sử dụng!", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

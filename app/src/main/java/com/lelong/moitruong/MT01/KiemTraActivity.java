@@ -27,6 +27,7 @@ import com.lelong.moitruong.Create_Table;
 import com.lelong.moitruong.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -64,14 +65,19 @@ public class KiemTraActivity extends AppCompatActivity implements OnSpinnerItemS
         btn_KetChuyen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call_showTranferDialog();
+                String mBoPhan[] = {"ABC3100000", "ABI3100000"};
+                boolean containsValue = Arrays.stream(mBoPhan).anyMatch(value -> value.equals(Constant_Class.UserDepID));
+                if (containsValue ){
+                    Call_showTranferDialog();
+                }else{
+                    Toast.makeText(KiemTraActivity.this, "Tài khoản không có quyền hạn sử dụng!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         btn_kiemtra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 LoginDialogFragment dialogFragment = new LoginDialogFragment(memo_xuong,memo_bophan);
                 dialogFragment.setSpinnerItemSelectedListener(KiemTraActivity.this);
                 dialogFragment.show(getSupportFragmentManager(), "LoginDialogFragment");

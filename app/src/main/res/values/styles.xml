@@ -8,6 +8,7 @@
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="popupMenuStyle">@style/MyPopupMenu</item>
     </style>
+
     <style name="MyPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
         <item name="android:popupBackground">@color/white</item>
     </style>
