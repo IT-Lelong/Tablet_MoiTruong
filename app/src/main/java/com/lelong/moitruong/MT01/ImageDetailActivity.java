@@ -39,7 +39,7 @@ public class ImageDetailActivity extends AppCompatActivity implements MoveDialog
     private int currentPosition;
     ActionBar actionBar;
     private Create_Table Cre_db = null;
-    String selectedDate,selectedDepartment,selectedDetail,g_result;
+    String selectedDate,selectedDepartment,selectedDetail,g_result,g_factory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Cre_db = new Create_Table(this);
@@ -53,6 +53,7 @@ public class ImageDetailActivity extends AppCompatActivity implements MoveDialog
 
         // Nhận danh sách đường dẫn của các tệp File
         imagePathList = getIntent().getStringArrayListExtra("imagePaths");
+        g_factory =  getIntent().getStringExtra("xuong");
 
         // Tạo lại danh sách File từ đường dẫn
         imageFiles = new ArrayList<>();
@@ -85,7 +86,7 @@ public class ImageDetailActivity extends AppCompatActivity implements MoveDialog
                 position = viewPager.getCurrentItem();
                 String myVariable = imageFiles.get(position).getName();
                 MoveDialog moveDialog = new MoveDialog();
-                moveDialog.setMyVariable(myVariable);
+                moveDialog.setMyVariable(myVariable,g_factory);
                 moveDialog.callback = this;
                 moveDialog.show(getSupportFragmentManager(), "MoveDialog");
                 break;

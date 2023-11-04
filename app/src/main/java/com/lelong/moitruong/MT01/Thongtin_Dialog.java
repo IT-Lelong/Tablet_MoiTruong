@@ -93,6 +93,10 @@ public class Thongtin_Dialog extends DialogFragment {
             g_ta_cpf001 = cur_getdata.getString(cur_getdata.getColumnIndexOrThrow("ta_cpf001"));
             cur_getdata.moveToNext();
         }
+        if(g_tc_fcd005.equals("null"))
+        {
+            g_tc_fcd005 = "";
+        }
         String g_bophan = g_tc_fcd003 + " " + g_tc_fcd004 + " " + g_tc_fcd005;
         String g_hmlon = g_tc_fcb004 + " " + g_tc_fcb005;
         String g_maH = g_tc_fcq001 + " " + g_cpf02 + " " + g_ta_cpf001;

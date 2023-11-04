@@ -125,6 +125,10 @@ public class KiemTraActivity extends AppCompatActivity implements OnSpinnerItemS
             g_tc_fcd004 = g_completed.getString(g_completed.getColumnIndexOrThrow("tc_fcd004"));
             g_tc_fcd005 = g_completed.getString(g_completed.getColumnIndexOrThrow("tc_fcd005"));
             value = Float.valueOf(g_completed.getString(g_completed.getColumnIndexOrThrow("g_count")));
+            if (g_tc_fcd005.equals("null"))
+            {
+                g_tc_fcd005="";
+            }
             bophan = g_tc_fcd004 + " " + g_tc_fcd005;
             entries.add(new PieEntry(value, bophan));
             g_completed.moveToNext();

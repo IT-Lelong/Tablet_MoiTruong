@@ -34,19 +34,21 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
     private final List<HangMucKiemTra_Model> hangmucChiTiet_list;
     private String g_ngay;
     private String g_maBP;
+    private String g_factory;
     private int position_hmlon;
     private int selectedPosition = -1; // Vị trí được chọn
     DecimalFormat decimalFormat;
     //private OnCaptureImageClickListener captureImageClickListener;
 
     //public HangMucKiemTra_Adapter(Context context, int mt01_hang_muc_main_item, List<HangMucKiemTra_Model> hangmucChiTiet_list, String g_ngay, String g_maBP, OnCaptureImageClickListener listener) {
-    public HangMucKiemTra_Adapter(Context context, int mt01_hang_muc_main_item,int position_hmlon, List<HangMucKiemTra_Model> hangmucChiTiet_list, String g_ngay, String g_maBP) {
+    public HangMucKiemTra_Adapter(Context context, int mt01_hang_muc_main_item,int position_hmlon, List<HangMucKiemTra_Model> hangmucChiTiet_list, String g_ngay, String g_maBP,String g_factory) {
         this.context = context;
         this.layout_resource = mt01_hang_muc_main_item;
         this.position_hmlon = position_hmlon;
         this.hangmucChiTiet_list = hangmucChiTiet_list;
         this.g_ngay = g_ngay;
         this.g_maBP = g_maBP;
+        this.g_factory = g_factory;
         //this.captureImageClickListener = listener;
 
         String pattern = "#,###.##";
@@ -147,6 +149,7 @@ public class HangMucKiemTra_Adapter extends RecyclerView.Adapter<HangMucKiemTra_
                 position_hmlon = hangmucChiTiet_list.get(adapterPosition).getG_hmLon();
                 Intent intent = new Intent(context, ThuVien_Anh.class);
                 intent.putExtra("ngay", g_ngay);
+                intent.putExtra("xuong", g_factory);
                 intent.putExtra("tuan", "");
                 intent.putExtra("bophan", g_maBP);
                 intent.putExtra("hangmuclon", String.valueOf(position_hmlon));

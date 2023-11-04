@@ -48,14 +48,16 @@ public class MoveDialog extends DialogFragment {
     Cursor cur_getbophan;
     Cursor g_dataimage;
     private String myVariable;
+    private String myfactory;
     String result;
     String g_hmlon,g_hmct,g_bp;
     // Constructor không đối số bắt buộc
     public MoveDialog() {
     }
     // Phương thức để thiết lập giá trị biến
-    public void setMyVariable(String variable) {
+    public void setMyVariable(String variable,String g_factory) {
         myVariable = variable;
+        myfactory = g_factory;
     }
 
     @NonNull
@@ -140,13 +142,20 @@ public class MoveDialog extends DialogFragment {
         }*/
         //cur_getdata = Cre_db.getdata_tc_fcd("DH");
         cur_getbophan = null;
-        cur_getbophan = Cre_db.getdata_tc_fcd(Constant_Class.UserFactory);
+        cur_getbophan = Cre_db.getdata_tc_fcd(myfactory);
         if (cur_getbophan.getCount() > 0) {
             cur_getbophan.moveToFirst();
             for (int i = 0; i < cur_getbophan.getCount(); i++) {
                 String g_ten = cur_getbophan.getString(cur_getbophan.getColumnIndexOrThrow("tc_fcd004"));
                 String g_xuong = cur_getbophan.getString(cur_getbophan.getColumnIndexOrThrow("tc_fcd005"));
-                String materialInfo = g_ten + " - " + g_xuong;
+                String materialInfo;
+                if (g_xuong.equals("null"))
+                {
+                    materialInfo = g_ten ;
+                }
+                else{
+                    materialInfo = g_ten + " - " + g_xuong;
+                }
                 bophan_List.add(materialInfo);
                 cur_getbophan.moveToNext();
             }

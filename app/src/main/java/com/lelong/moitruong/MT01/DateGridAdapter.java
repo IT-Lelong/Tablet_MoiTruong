@@ -25,10 +25,12 @@ public class DateGridAdapter extends RecyclerView.Adapter<DateGridAdapter.ViewHo
 
     private List<File> imageFiles;
     private Context context;
+    private String g_factory;
     private List<ImageGroup> imageGroups;
-    public DateGridAdapter(Context context,List<File> imageFiles) {
+    public DateGridAdapter(Context context,List<File> imageFiles,String g_factory) {
         this.imageFiles = imageFiles;
         this.context = context;
+        this.g_factory = g_factory;
     }
     //public ThuVien_Anh_Adapter(Context context, List<File> imageFiles) {
     //    this.context = context;
@@ -77,6 +79,7 @@ public class DateGridAdapter extends RecyclerView.Adapter<DateGridAdapter.ViewHo
                     //intent.putParcelableArrayListExtra("imageUris", imageUris);
                     intent.putStringArrayListExtra("imagePaths", imagePathList);
                     intent.putExtra("position", clickedPosition);
+                    intent.putExtra("xuong", g_factory);
                     context.startActivity(intent);
 
                 }

@@ -149,13 +149,19 @@ public class Search_Dialog extends DialogFragment {
         sp_tuan.setSelection(tuan_List.size() - 1);
         String xuong= null;
         cur_getbophan = null;
-        cur_getbophan = Cre_db.getdata_tc_fcd(Constant_Class.UserFactory);
+        cur_getbophan = Cre_db.getAllBP();
         if (cur_getbophan.getCount() > 0) {
             cur_getbophan.moveToFirst();
             for (int i = 0; i < cur_getbophan.getCount(); i++) {
                 String g_ten = cur_getbophan.getString(cur_getbophan.getColumnIndexOrThrow("tc_fcd004"));
                 String g_xuong = cur_getbophan.getString(cur_getbophan.getColumnIndexOrThrow("tc_fcd005"));
-                String materialInfo = g_ten + " - " + g_xuong;
+                String materialInfo;
+                if(g_xuong.equals("null")) {
+                    materialInfo = g_ten;
+                }
+                else{
+                    materialInfo = g_ten + " - " + g_xuong;
+                }
                 bophan_List.add(materialInfo);
                 cur_getbophan.moveToNext();
             }

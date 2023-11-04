@@ -275,7 +275,7 @@ public class HangMucKiemTra extends AppCompatActivity {
                 R.layout.mt01_hang_muc_main_item,g_hangMucPosition,
                 hangmucChiTiet_list,
                 g_ngay,
-                g_maBP);
+                g_maBP,g_factory);
         rcv_hangmuc.setAdapter(hangMucKiemTra_adapter);
     }
 

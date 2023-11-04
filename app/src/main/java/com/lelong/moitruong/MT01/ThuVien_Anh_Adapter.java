@@ -22,10 +22,12 @@ import java.util.List;
 public class ThuVien_Anh_Adapter extends RecyclerView.Adapter<ThuVien_Anh_Adapter.ImageGroupViewHolder> {
     private List<ImageGroup> imageGroups;
     private Context context;
+    private String g_factory;
 
-    public ThuVien_Anh_Adapter(Context context, List<ImageGroup> imageGroups) {
+    public ThuVien_Anh_Adapter(Context context, List<ImageGroup> imageGroups,String g_factory) {
         this.context = context;
         this.imageGroups = imageGroups;
+        this.g_factory= g_factory;
     }
 
     @NonNull
@@ -44,7 +46,7 @@ public class ThuVien_Anh_Adapter extends RecyclerView.Adapter<ThuVien_Anh_Adapte
         holder.tv_hangmuc.setText(imageGroup.getHangmuc());
 
         // Tạo Adapter con cho RecyclerView trong nhóm ảnh
-        DateGridAdapter imageAdapter = new DateGridAdapter(context,imageGroup.getImage());
+        DateGridAdapter imageAdapter = new DateGridAdapter(context,imageGroup.getImage(),g_factory);
         holder.rv_image.setAdapter(imageAdapter);
     }
 

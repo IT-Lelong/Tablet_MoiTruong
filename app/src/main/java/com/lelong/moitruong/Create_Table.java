@@ -379,7 +379,8 @@ public class Create_Table {
     }
 
     public Cursor departmentCheckedData() {
-        String selectQuery = " SELECT 0,tc_fcd004||' '||tc_fcd005 AS donvi ,tc_fcd003, SUM((CASE WHEN tc_fce006 = 'true' THEN 1 ELSE 0 end)) slerr  ,tc_fce002,tc_fce004 " +
+        //String selectQuery = " SELECT 0,tc_fcd004||' '||tc_fcd005 AS donvi ,tc_fcd003, SUM((CASE WHEN tc_fce006 = 'true' THEN 1 ELSE 0 end)) slerr  ,tc_fce002,tc_fce004 " +
+        String selectQuery = " SELECT 0,(CASE WHEN tc_fcd005 ='null' THEN tc_fcd004 || ' ' || '' ELSE tc_fcd004 || ' ' || tc_fcd005 END) AS donvi ,tc_fcd003, SUM((CASE WHEN tc_fce006 = 'true' THEN 1 ELSE 0 end)) slerr  ,tc_fce002,tc_fce004 " +
                 " FROM tc_fce_file,tc_fcd_file " +
                 " WHERE tc_fcd006=tc_fce004 " +
                 " GROUP BY  tc_fcd004||' '||tc_fcd005,tc_fcd003,tc_fce002,tc_fce004 " +
@@ -687,6 +688,15 @@ public class Create_Table {
     public Cursor getData() {
         String selectQuery = "SELECT tc_fcf001,tc_fcf002,tc_fcf003,tc_fcf004,tc_fcf005 " +
                 " FROM tc_fcf_file WHERE tc_fcf002 < DATE('now', '-2 months') ORDER BY tc_fcf005";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    public Cursor getAllBP() {
+        String g_dk="'01','02','03','04'";
+        String selectQuery = "SELECT * FROM tc_fcd_file " +
+                " WHERE tc_fcd001 in (" + g_dk + ") " +
+                " ORDER BY tc_fcd001,tc_fcd002 ";
+
         return db.rawQuery(selectQuery, null);
     }
 

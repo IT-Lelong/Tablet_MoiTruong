@@ -38,7 +38,7 @@ public class ThuVien_Anh extends AppCompatActivity {
     private ViewPager2 viewPager;
     private TabLayout dotsLayout;
 
-    String selectedDate,selectedDepartment,selectedDetail,selectedKiemtra,selectedWeek,nam,thang,tuan;
+    String selectedDate,selectedDepartment,selectedDetail,selectedKiemtra,selectedWeek,nam,thang,tuan,g_factory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,7 @@ public class ThuVien_Anh extends AppCompatActivity {
         Cre_db.open();
         Intent intent = getIntent();
         selectedDate = intent.getStringExtra("ngay");
+        g_factory =  intent.getStringExtra("xuong");
         selectedDepartment = intent.getStringExtra("bophan");
         selectedKiemtra = intent.getStringExtra("hangmuclon");
         selectedDetail = intent.getStringExtra("hangmuc");
@@ -69,7 +70,7 @@ public class ThuVien_Anh extends AppCompatActivity {
         // Thêm thêm ảnh vào danh sách theo nhu cầu
         List<ImageGroup> imageGroup = generateSampleData();
         // Thiết lập Adapter và LayoutManager cho RecyclerView
-        adapter = new ThuVien_Anh_Adapter(this,imageGroup);
+        adapter = new ThuVien_Anh_Adapter(this,imageGroup,g_factory);
         recyclerView.setAdapter(adapter);
 
         // Cài đặt GridLayoutManager với 3 cột
@@ -86,7 +87,7 @@ public class ThuVien_Anh extends AppCompatActivity {
         //adapter = new ThuVien_Anh_Adapter(this,imageFiles);
         //recyclerView.setAdapter(adapter);
         List<ImageGroup> imageGroup = generateSampleData();
-        adapter = new ThuVien_Anh_Adapter(this,imageGroup);
+        adapter = new ThuVien_Anh_Adapter(this,imageGroup,g_factory);
         recyclerView.setAdapter(adapter);
     }
     public static List<String> getWeekDaysForMonth(int year, int month, int weekInMonth) {
@@ -186,6 +187,9 @@ public class ThuVien_Anh extends AppCompatActivity {
             String tc_fcd005 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcd005"));
             String tc_fcc006 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc006"));
             String tc_fcc007 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc007"));
+            if (tc_fcd005.equals("null")){
+                tc_fcd005 = "";
+            }
             String bophan = tc_fcf003 + "- " + tc_fcd004 + " " + tc_fcd005;
             String hangmuc = tc_fcf001 + " - " + tc_fcc007;
             List <File> searchImage= new ArrayList<>();
@@ -222,6 +226,9 @@ public class ThuVien_Anh extends AppCompatActivity {
                     String tc_fcd005 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcd005"));
                     String tc_fcc006 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc006"));
                     String tc_fcc007 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc007"));
+                    if (tc_fcd005.equals("null")){
+                        tc_fcd005 = "";
+                    }
                     String bophan = tc_fcf003 + "- " + tc_fcd004 + " " + tc_fcd005;
                     String hangmuc = tc_fcf001 + " - " + tc_fcc007;
                     List <File> searchImage= new ArrayList<>();
@@ -253,6 +260,9 @@ public class ThuVien_Anh extends AppCompatActivity {
                 String tc_fcd005 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcd005"));
                 String tc_fcc006 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc006"));
                 String tc_fcc007 = getGroup.getString(getGroup.getColumnIndexOrThrow("tc_fcc007"));
+                if (tc_fcd005.equals("null")){
+                    tc_fcd005 = "";
+                }
                 String bophan = tc_fcf003 + "- " + tc_fcd004 + " " + tc_fcd005;
                 String hangmuc = tc_fcf001 + " - " + tc_fcc007;
                 List <File> searchImage= new ArrayList<>();
