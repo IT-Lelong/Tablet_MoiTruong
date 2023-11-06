@@ -142,7 +142,15 @@ public class MoveDialog extends DialogFragment {
         }*/
         //cur_getdata = Cre_db.getdata_tc_fcd("DH");
         cur_getbophan = null;
-        cur_getbophan = Cre_db.getdata_tc_fcd(myfactory);
+        String g_x = null;
+        if (myfactory.equals("Đức Hòa"))
+        {
+            g_x = "DH";
+        }
+        else{
+            g_x = "BL";
+        }
+        cur_getbophan = Cre_db.getdata_tc_fcd(g_x);
         if (cur_getbophan.getCount() > 0) {
             cur_getbophan.moveToFirst();
             for (int i = 0; i < cur_getbophan.getCount(); i++) {
