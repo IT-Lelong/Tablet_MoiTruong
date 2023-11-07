@@ -671,7 +671,7 @@ public class Create_Table {
         return db.rawQuery(selectQuery, null);
     }
     public Cursor getDataImage(String name) {
-        String selectQuery = "SELECT tc_fcb005,tc_fcc007,tc_fcd004,tc_fcd005 FROM tc_fcb_file,tc_fcc_file,tc_fcd_file,tc_fcf_file" +
+        String selectQuery = "SELECT tc_fcb005,tc_fcc007,tc_fcd004,tc_fcd005,tc_fcd001 FROM tc_fcb_file,tc_fcc_file,tc_fcd_file,tc_fcf_file" +
                 " WHERE tc_fcf001 = tc_fcc005 AND tc_fcc001 = tc_fcb001 AND tc_fcc002 = tc_fcb002 AND tc_fcc003 = tc_fcb003" +
                 " AND tc_fcf003 = tc_fcd006  " +
                 " AND tc_fcf005='"+ name +"' ORDER BY tc_fcb005,tc_fcc007,tc_fcd004,tc_fcd005";

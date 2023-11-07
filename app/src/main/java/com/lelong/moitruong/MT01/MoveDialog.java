@@ -50,7 +50,7 @@ public class MoveDialog extends DialogFragment {
     private String myVariable;
     private String myfactory;
     String result;
-    String g_hmlon,g_hmct,g_bp;
+    String g_hmlon,g_hmct,g_bp,g_tc_fcd001;
     // Constructor không đối số bắt buộc
     public MoveDialog() {
     }
@@ -102,6 +102,7 @@ public class MoveDialog extends DialogFragment {
                 g_hmct = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcc007"));
                 String g_bp1 = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcd004"));
                 String g_bp2 = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcd005"));
+                g_tc_fcd001 = g_dataimage.getString(g_dataimage.getColumnIndexOrThrow("tc_fcd001"));
                 g_bp = g_bp1 + " - " + g_bp2;
                 g_dataimage.moveToNext();
             }
@@ -144,20 +145,22 @@ public class MoveDialog extends DialogFragment {
         cur_getbophan = null;
         String g_x = null;
         if (myfactory == null ){
-            cur_getbophan = Cre_db.getAllBP();
-        }
-        else{
-            if (myfactory.equals("Đức Hòa"))
-            {
-                g_x = "DH";
-                cur_getbophan = Cre_db.getdata_tc_fcd(g_x);
+            if (g_tc_fcd001.equals("01") || g_tc_fcd001.equals("02") || g_tc_fcd001.equals("03")) {
+                g_x="DH";
             }
             else{
-                g_x = "BL";
-                cur_getbophan = Cre_db.getdata_tc_fcd(g_x);
+                g_x="BL";
             }
         }
-        //cur_getbophan = Cre_db.getdata_tc_fcd(g_x);
+        else{
+            if (myfactory.equals("Đức Hòa")) {
+                g_x="DH";
+            }
+            else{
+                g_x="BL";
+            }
+        }
+        cur_getbophan = Cre_db.getdata_tc_fcd(g_x);
         if (cur_getbophan.getCount() > 0) {
             cur_getbophan.moveToFirst();
             for (int i = 0; i < cur_getbophan.getCount(); i++) {
