@@ -144,7 +144,7 @@ public class MoveDialog extends DialogFragment {
         //cur_getdata = Cre_db.getdata_tc_fcd("DH");
         cur_getbophan = null;
         String g_x = null;
-        if (myfactory == null ){
+        if (myfactory == null || myfactory.equals("") ){
             if (g_tc_fcd001.equals("01") || g_tc_fcd001.equals("02") || g_tc_fcd001.equals("03")) {
                 g_x="DH";
             }
